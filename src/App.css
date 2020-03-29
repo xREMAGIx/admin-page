@@ -36,3 +36,27 @@
     transform: rotate(360deg);
   }
 }
+
+.root {
+  display: "flex";
+}
+
+.content {
+  max-width: 1024px;
+  height: "100vh";
+  overflow: "auto";
+}
+
+.appBarSpacer {
+  min-height: 56px;
+}
+@media (min-width: 0px) and (orientation: landscape) {
+  .appBarSpacer {
+    min-height: 48px;
+  }
+}
+@media (min-width: 600px) {
+  .appBarSpacer {
+    min-height: 64px;
+  }
+}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
@@ -17,6 +17,9 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridList from "@material-ui/core/GridList";
+
+import { useDispatch } from "react-redux";
+import { productActions } from "../_actions";
 
 const useStyles = makeStyles(theme => ({
   modal: {
@@ -54,31 +57,39 @@ export default function TransitionsModal() {
   const [open, setOpen] = React.useState(false);
 
   const [onImageChange, setOnImageChange] = React.useState("");
+  const [image, setImage] = React.useState("");
+  //const user = useSelector(state => state.authentication.user);
+  const dispatch = useDispatch();
+
+  const [formData, setFormData] = useState({
+    sku: "a",
+    productName: "b",
+    category: "c",
+    description: "d",
+    price: 1,
+    discount: 2,
+    size: 3
+  });
+
+  const {
+    sku,
+    productName,
+    category,
+    description,
+    price,
+    discount,
+    size
+  } = formData;
+
+  const onChange = e => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleOnImageChange = event => {
     if (event.target.files && event.target.files[0]) {
-      //   let reader = new FileReader();
-      //   reader.onload = e => {
-      //     setOnImageChange({ image: e.target.result });
-      //   };
-      //   reader.readAsDataURL(event.target.files[0]);
       setOnImageChange(URL.createObjectURL(event.target.files[0]));
-      console.log(onImageChange);
+      setImage(event.target.files[0]);
     }
-  };
-
-  const [values, setValues] = React.useState({
-    sku: "",
-    name: "",
-    category: "",
-    price: 0,
-    size: 30,
-    discount: 0,
-    description: " "
-  });
-
-  const handleChange = prop => event => {
-    setValues({ ...values, [prop]: event.target.value });
   };
 
   const handleOpen = () => {
@@ -87,6 +98,10 @@ export default function TransitionsModal() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const onSubmit = async () => {
+    dispatch(productActions.add(formData, image));
   };
 
   return (
@@ -122,6 +137,9 @@ export default function TransitionsModal() {
                       label="SKU"
                       id="outlined-sku"
                       variant="outlined"
+                      name="sku"
+                      value={sku}
+                      onChange={e => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -130,6 +148,9 @@ export default function TransitionsModal() {
                       label="Product Name"
                       id="outlined-product-name"
                       variant="outlined"
+                      name="productName"
+                      value={productName}
+                      onChange={e => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -138,6 +159,9 @@ export default function TransitionsModal() {
                       label="Category"
                       id="outlined-category"
                       variant="outlined"
+                      name="category"
+                      value={category}
+                      onChange={e => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -148,6 +172,9 @@ export default function TransitionsModal() {
                       multiline
                       rows="4"
                       variant="outlined"
+                      name="description"
+                      value={description}
+                      onChange={e => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12} container spacing={2}>
@@ -162,8 +189,9 @@ export default function TransitionsModal() {
                         </InputLabel>
                         <OutlinedInput
                           id="outlined-adornment-price"
-                          value={values.price}
-                          onChange={handleChange("price")}
+                          name="price"
+                          value={price}
+                          onChange={e => onChange(e)}
                           startAdornment={
                             <InputAdornment position="start">$</InputAdornment>
                           }
@@ -182,8 +210,9 @@ export default function TransitionsModal() {
                         </InputLabel>
                         <OutlinedInput
                           id="outlined-adornment-discount"
-                          value={values.discount}
-                          onChange={handleChange("discount")}
+                          name="discount"
+                          value={discount}
+                          onChange={e => onChange(e)}
                           startAdornment={
                             <InputAdornment position="start">%</InputAdornment>
                           }
@@ -198,13 +227,14 @@ export default function TransitionsModal() {
                       className={classes.margin}
                       variant="outlined"
                     >
-                      <InputLabel htmlFor="outlined-adornment-amount">
+                      <InputLabel htmlFor="outlined-adornment-size">
                         Size
                       </InputLabel>
                       <OutlinedInput
-                        id="outlined-adornment-amount"
-                        value={values.discount}
-                        onChange={handleChange("discount")}
+                        id="outlined-adornment-size"
+                        name="size"
+                        value={size}
+                        onChange={e => onChange(e)}
                         startAdornment={
                           <InputAdornment position="start">Kg</InputAdornment>
                         }
@@ -214,7 +244,11 @@ export default function TransitionsModal() {
                   </Grid>
                   <Grid item container spacing={5}>
                     <Grid item>
-                      <Button variant="contained" color="primary">
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={e => onSubmit(e)}
+                      >
                         Add
                       </Button>
                     </Grid>

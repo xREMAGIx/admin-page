@@ -1,7 +1,8 @@
-import React from "react";
-
+import React, { useEffect } from "react";
 import { lighten, makeStyles, fade } from "@material-ui/core/styles";
 import CustomDrawer from "./CustomDrawer";
+import { useDispatch, useSelector } from "react-redux";
+import { productActions } from "../_actions";
 
 import PropTypes from "prop-types";
 import clsx from "clsx";
@@ -27,155 +28,7 @@ import SearchIcon from "@material-ui/icons/Search";
 
 import AddProductModal from "./AddProductModal";
 
-function createData(
-  sku,
-  productName,
-  category,
-  img,
-  price,
-  size,
-  discount,
-  description,
-  createdDate
-) {
-  return {
-    sku,
-    productName,
-    category,
-    img,
-    price,
-    size,
-    discount,
-    description,
-    createdDate
-  };
-}
-
-const dateFormat = { day: "numeric", month: "long", year: "numeric" };
-
-const rows = [
-  createData(
-    "01",
-    "Cupcake",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "02",
-    "Donut",
-    "Food",
-    "https://source.unsplash.com/random",
-    5,
-    10,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "03",
-    "Pepsi",
-    "Drink",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "04",
-    "Frozen Yogurt",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "05",
-    "Gingerbread",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "06",
-    "Honeycomb",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "07",
-    "Ice cream sandwich",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "08",
-    "Jelly bean",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "09",
-    "Kitkat",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "10",
-    "Lolipop",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  ),
-  createData(
-    "11",
-    "Marshmallow",
-    "Food",
-    "https://source.unsplash.com/random",
-    10,
-    30,
-    0,
-    "None",
-    new Date().toLocaleString("en-US", dateFormat)
-  )
-];
+//const dateFormat = { day: "numeric", month: "long", year: "numeric" };
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -228,10 +81,10 @@ const headCells = [
     label: "Description"
   },
   {
-    id: "createdDate",
+    id: "createAt",
     numeric: false,
     disablePadding: true,
-    label: "Created Date"
+    label: "Create Date"
   }
 ];
 
@@ -357,7 +210,13 @@ const useToolbarStyles = makeStyles(theme => ({
 
 const EnhancedTableToolbar = props => {
   const classes = useToolbarStyles();
-  const { numSelected } = props;
+  const { numSelected, selectedIndex } = props;
+  //const user = useSelector(state => state.authentication.user);
+  const dispatch = useDispatch();
+
+  const onDelete = id => {
+    dispatch(productActions.delete(id));
+  };
 
   return (
     <React.Fragment>
@@ -392,7 +251,10 @@ const EnhancedTableToolbar = props => {
             {numSelected < 2 ? (
               <Grid item>
                 <Tooltip title="Modify">
-                  <IconButton href="/products-edit" aria-label="modify">
+                  <IconButton
+                    href={"/products-edit/" + selectedIndex[0]}
+                    aria-label="modify"
+                  >
                     <CreateIcon />
                   </IconButton>
                 </Tooltip>
@@ -400,7 +262,10 @@ const EnhancedTableToolbar = props => {
             ) : null}
             <Grid item>
               <Tooltip title="Delete">
-                <IconButton aria-label="delete">
+                <IconButton
+                  aria-label="delete"
+                  onClick={() => onDelete(selectedIndex[0])}
+                >
                   <DeleteIcon />
                 </IconButton>
               </Tooltip>
@@ -482,12 +347,17 @@ const useStyles = makeStyles(theme => ({
 export default function Products() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("createdDate");
+  const [orderBy, setOrderBy] = React.useState("");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  const products = useSelector(state => state.products);
+  //const user = useSelector(state => state.authentication.user);
+  const dispatch = useDispatch();
 
-  // Format formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+  useEffect(() => {
+    dispatch(productActions.getAll());
+  }, [dispatch]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -497,7 +367,7 @@ export default function Products() {
 
   const handleSelectAllClick = event => {
     if (event.target.checked) {
-      const newSelecteds = rows.map(n => n.sku);
+      const newSelecteds = products.items.map(n => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -535,8 +405,10 @@ export default function Products() {
 
   const isSelected = name => selected.indexOf(name) !== -1;
 
-  const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+  // const emptyRows =
+  //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
+
+  const emptyRows = 0;
 
   return (
     <React.Fragment>
@@ -544,96 +416,109 @@ export default function Products() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.mainContainer}>
-            <EnhancedTableToolbar numSelected={selected.length} />
-            <TableContainer className={classes.tableContainer}>
-              <Table
-                stickyHeader
-                className={classes.table}
-                aria-labelledby="tableTitle"
-                aria-label="enhanced table"
-              >
-                <EnhancedTableHead
-                  classes={classes}
-                  numSelected={selected.length}
-                  order={order}
-                  orderBy={orderBy}
-                  onSelectAllClick={handleSelectAllClick}
-                  onRequestSort={handleRequestSort}
-                  rowCount={rows.length}
-                />
-                <TableBody>
-                  {stableSort(rows, getComparator(order, orderBy))
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row, index) => {
-                      const isItemSelected = isSelected(row.sku);
-                      const labelId = `enhanced-table-checkbox-${index}`;
+          {products.items && (
+            <Container maxWidth="lg" className={classes.mainContainer}>
+              <EnhancedTableToolbar
+                numSelected={selected.length}
+                selectedIndex={selected}
+              />
+              <TableContainer className={classes.tableContainer}>
+                <Table
+                  stickyHeader
+                  className={classes.table}
+                  aria-labelledby="tableTitle"
+                  aria-label="enhanced table"
+                >
+                  <EnhancedTableHead
+                    classes={classes}
+                    numSelected={selected.length}
+                    order={order}
+                    orderBy={orderBy}
+                    onSelectAllClick={handleSelectAllClick}
+                    onRequestSort={handleRequestSort}
+                    rowCount={products.items.length}
+                  />
+                  <TableBody>
+                    {stableSort(products.items, getComparator(order, orderBy))
+                      .slice(
+                        page * rowsPerPage,
+                        page * rowsPerPage + rowsPerPage
+                      )
+                      .map((row, index) => {
+                        const isItemSelected = isSelected(row._id);
+                        const labelId = `enhanced-table-checkbox-${index}`;
 
-                      return (
-                        <TableRow
-                          hover
-                          onClick={event => handleClick(event, row.sku)}
-                          role="checkbox"
-                          aria-checked={isItemSelected}
-                          tabIndex={-1}
-                          key={row.sku}
-                          selected={isItemSelected}
-                        >
-                          <TableCell>
-                            <Checkbox
-                              checked={isItemSelected}
-                              inputProps={{ "aria-labelledby": labelId }}
-                            />
-                          </TableCell>
-                          <TableCell
-                            component="th"
-                            id={labelId}
-                            scope="row"
-                            padding="none"
+                        return (
+                          <TableRow
+                            hover
+                            onClick={event => handleClick(event, row._id)}
+                            role="checkbox"
+                            aria-checked={isItemSelected}
+                            tabIndex={-1}
+                            key={row.sku}
+                            selected={isItemSelected}
                           >
-                            {row.sku}
-                          </TableCell>
-                          <TableCell scope="row" padding="none">
-                            {row.productName}
-                          </TableCell>
-                          <TableCell scope="row" padding="none">
-                            {row.category}
-                          </TableCell>
-                          <TableCell padding="non">
-                            <img
-                              className={classes.img}
-                              src={row.img}
-                              alt="broken"
-                            />
-                          </TableCell>
-                          <TableCell align="right">{row.price}</TableCell>
-                          <TableCell align="right">{row.size}</TableCell>
-                          <TableCell align="right">{row.discount}%</TableCell>
-                          <TableCell scope="row" padding="none">
-                            {row.description}
-                          </TableCell>
-                          <TableCell align="left">{row.createdDate}</TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  {emptyRows > 0 && (
-                    <TableRow style={{ height: 53 * emptyRows }}>
-                      <TableCell colSpan={6} />
-                    </TableRow>
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={rows.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onChangePage={handleChangePage}
-              onChangeRowsPerPage={handleChangeRowsPerPage}
-            />
-          </Container>
+                            <TableCell>
+                              <Checkbox
+                                checked={isItemSelected}
+                                inputProps={{ "aria-labelledby": labelId }}
+                              />
+                            </TableCell>
+                            <TableCell
+                              component="th"
+                              id={labelId}
+                              scope="row"
+                              padding="none"
+                            >
+                              {row.sku}
+                            </TableCell>
+                            <TableCell scope="row" padding="none">
+                              {row.productName}
+                            </TableCell>
+                            <TableCell scope="row" padding="none">
+                              {row.category}
+                            </TableCell>
+                            <TableCell padding="none">
+                              {row.images.length > 0 ? (
+                                <img
+                                  className={classes.img}
+                                  src={
+                                    "http://localhost:5000/uploads/" +
+                                    row.images[0].path
+                                  }
+                                  alt="broken"
+                                />
+                              ) : null}
+                            </TableCell>
+                            <TableCell align="right">{row.price}</TableCell>
+                            <TableCell align="right">{row.size}</TableCell>
+                            <TableCell align="right">{row.discount}%</TableCell>
+                            <TableCell scope="row" padding="none">
+                              {row.description}
+                            </TableCell>
+                            <TableCell align="left">{row.createAt}</TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    {emptyRows > 0 && (
+                      <TableRow style={{ height: 53 * emptyRows }}>
+                        <TableCell colSpan={6} />
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={products.items.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={handleChangePage}
+                onChangeRowsPerPage={handleChangeRowsPerPage}
+              />
+            </Container>
+          )}
         </main>
       </div>
     </React.Fragment>

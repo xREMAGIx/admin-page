@@ -9,6 +9,7 @@ import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import ReceiptIcon from "@material-ui/icons/Receipt";
+import TextFormatIcon from "@material-ui/icons/TextFormat";
 
 export const mainListItems = (
   <div>
@@ -48,11 +49,11 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Saved reports</ListSubheader>
-    <ListItem button>
+    <ListItem button component="a" href="/text-editor">
       <ListItemIcon>
-        <AssignmentIcon />
+        <TextFormatIcon />
       </ListItemIcon>
-      <ListItemText primary="Current month" />
+      <ListItemText primary="Text Editor" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
