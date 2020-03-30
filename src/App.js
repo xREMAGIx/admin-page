@@ -7,14 +7,10 @@ import Dashboard from "./front-end/Dashboard";
 import Orders from "./front-end/Orders";
 import Products from "./front-end/Products";
 import ProductsEdit from "./front-end/ProductsEdit";
-import TextEditor from "./front-end/TextEditor";
 import Login from "./front-end/Login";
 import Register from "./front-end/Register";
 import { history } from "./_helpers";
-
-//const App = ({ store }) => (
-//const alert = useSelector(state => state.alert);
-//const dispatch = useDispatch();
+import TextEditor from "./front-end/TextEditor";
 
 const App = ({ store }) => (
   <Provider store={store}>
