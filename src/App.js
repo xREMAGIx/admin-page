@@ -11,6 +11,10 @@ import Login from "./front-end/Login";
 import Register from "./front-end/Register";
 import { history } from "./_helpers";
 import TextEditor from "./front-end/TextEditor";
+import Banner from "./front-end/Banner";
+import Posts from "./front-end/Posts";
+import PostsAdd from "./front-end/PostsAdd";
+import PostsEdit from "./front-end/PostsEdit";
 
 const App = ({ store }) => (
   <Provider store={store}>
@@ -22,9 +26,11 @@ const App = ({ store }) => (
         <Route exact path="/products" component={Products}></Route>
         <Route exact path="/products-edit/:id" component={ProductsEdit}></Route>
         <Route exact path="/orders" component={Orders}></Route>
-        <Route exact path="/text-editor">
-          <TextEditor />
-        </Route>
+        <Route exact path="/posts" component={Posts}></Route>
+        <Route exact path="/posts-add" component={PostsAdd}></Route>
+        <Route exact path="/posts-edit/:id" component={PostsEdit}></Route>
+        <Route exact path="/text-editor" component={TextEditor}></Route>
+        <Route exact path="/banner" component={Banner}></Route>
         <Route render={() => <h1>404: page not found</h1>} />
       </Switch>
     </Router>

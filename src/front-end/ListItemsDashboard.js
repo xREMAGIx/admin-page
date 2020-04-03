@@ -7,9 +7,10 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
-import AssignmentIcon from "@material-ui/icons/Assignment";
-import ReceiptIcon from "@material-ui/icons/Receipt";
 import TextFormatIcon from "@material-ui/icons/TextFormat";
+import PanoramaIcon from "@material-ui/icons/Panorama";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import FastfoodIcon from "@material-ui/icons/Fastfood";
 
 export const mainListItems = (
   <div>
@@ -21,15 +22,21 @@ export const mainListItems = (
     </ListItem>
     <ListItem button component="a" href="/products">
       <ListItemIcon>
-        <ShoppingCartIcon />
+        <FastfoodIcon />
       </ListItemIcon>
       <ListItemText primary="Products" />
     </ListItem>
     <ListItem button component="a" href="/orders">
       <ListItemIcon>
-        <ReceiptIcon />
+        <ShoppingCartIcon />
       </ListItemIcon>
       <ListItemText primary="Orders" />
+    </ListItem>
+    <ListItem button component="a" href="/posts">
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="Posts" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
@@ -48,24 +55,18 @@ export const mainListItems = (
 
 export const secondaryListItems = (
   <div>
-    <ListSubheader inset>Saved reports</ListSubheader>
+    <ListSubheader inset>Store page</ListSubheader>
     <ListItem button component="a" href="/text-editor">
       <ListItemIcon>
         <TextFormatIcon />
       </ListItemIcon>
       <ListItemText primary="Text Editor" />
     </ListItem>
-    <ListItem button>
+    <ListItem button component="a" href="/banner">
       <ListItemIcon>
-        <AssignmentIcon />
+        <PanoramaIcon />
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
-    </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
+      <ListItemText primary="Banner" />
     </ListItem>
   </div>
 );

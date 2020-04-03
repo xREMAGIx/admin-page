@@ -1,7 +1,7 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
 
-export const productService = {
+export const postService = {
   getAll,
   getById,
   add,
@@ -14,7 +14,7 @@ async function getAll() {
     //headers: authHeader()
   };
 
-  return await axios.get(`/api/products`, requestConfig).then(handleResponse);
+  return await axios.get(`/api/posts`, requestConfig).then(handleResponse);
 }
 
 async function getById(id) {
@@ -22,11 +22,11 @@ async function getById(id) {
     headers: authHeader()
   };
   return await axios
-    .get(`/api/products/${id}`, requestConfig)
+    .get(`/api/posts/${id}`, requestConfig)
     .then(handleResponse);
 }
 
-async function add(product, image) {
+async function add(post, image) {
   const imageData = new FormData();
   imageData.append("image", image);
 
@@ -37,13 +37,14 @@ async function add(product, image) {
     }
   };
 
-  const body = JSON.stringify(product);
+  console.log(post);
+  const body = JSON.stringify(post);
   console.log(body);
 
   if (imageData.get("image")) {
     let res;
     try {
-      res = await axios.post(`/api/products`, body, requestConfig);
+      res = await axios.post(`/api/posts`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +57,7 @@ async function add(product, image) {
     try {
       return await axios
         .put(
-          "/api/products/" + res.data.data._id + "/image",
+          "/api/posts/" + res.data.data._id + "/image",
           imageData,
           configFormData
         )
@@ -66,12 +67,12 @@ async function add(product, image) {
     }
   } else {
     return await axios
-      .post("/api/products", body, requestConfig)
+      .post("/api/posts", body, requestConfig)
       .then(handleResponse);
   }
 }
 
-async function update(id, product, image) {
+async function update(id, post, image) {
   const imageData = new FormData();
   imageData.append("image", image);
 
@@ -82,11 +83,12 @@ async function update(id, product, image) {
     }
   };
 
-  const body = JSON.stringify(product);
+  const body = JSON.stringify(post);
+  console.log(body);
 
   if (imageData.get("image")) {
     try {
-      await axios.put(`/api/products/${id}`, body, requestConfig);
+      await axios.put(`/api/post/${id}`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -98,14 +100,14 @@ async function update(id, product, image) {
     };
     try {
       return await axios
-        .put("/api/products/" + id + "/image", imageData, configFormData)
+        .put("/api/posts/" + id + "/image", imageData, configFormData)
         .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
   } else {
     return await axios
-      .put(`/api/products/${id}`, body, requestConfig)
+      .put(`/api/posts/${id}`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -117,13 +119,12 @@ async function _delete(id) {
   };
 
   return await axios
-    .delete(`/api/products/${id}`, requestConfig)
+    .delete(`/api/posts/${id}`, requestConfig)
     .then(handleResponse);
 }
 
 function handleResponse(response) {
   const data = response.data.data;
-  console.log(data);
   if (response.status !== 200) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
@@ -134,5 +135,6 @@ function handleResponse(response) {
     const error = (data && data.message) || response.statusText;
     return Promise.reject(error);
   }
+
   return data;
 }

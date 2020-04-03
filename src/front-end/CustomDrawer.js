@@ -10,9 +10,12 @@ import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import Badge from "@material-ui/core/Badge";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import AccountCircle from "@material-ui/icons/AccountCircle";
 import { mainListItems, secondaryListItems } from "./ListItemsDashboard";
 
 const drawerWidth = 240;
@@ -102,6 +105,17 @@ const useStyles = makeStyles(theme => ({
 export default function CustomDrawer() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
+  const [profileAnchorEl, setProfileAnchorEl] = React.useState(null);
+  const openProfile = Boolean(profileAnchorEl);
+
+  const handleMenu = event => {
+    setProfileAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setProfileAnchorEl(null);
+  };
+
   const handleDrawerOpen = () => {
     setOpen(true);
   };
@@ -136,13 +150,51 @@ export default function CustomDrawer() {
             noWrap
             className={classes.title}
           >
-            Dashboard
+            Admin page
           </Typography>
           <IconButton color="inherit">
             <Badge badgeContent={4} color="secondary">
               <NotificationsIcon />
             </Badge>
           </IconButton>
+          <div>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={profileAnchorEl}
+              getContentAnchorEl={null}
+              // anchorOrigin={{
+              //   vertical: "top",
+              //   horizontal: "right"
+              // }}
+              keepMounted
+              // transformOrigin={{
+              //   vertical: "top",
+              //   horizontal: "right"
+              // }}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center"
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center"
+              }}
+              open={openProfile}
+              onClose={handleClose}
+            >
+              <MenuItem onClick={handleClose}>Message</MenuItem>
+              <MenuItem onClick={handleClose}>Logout</MenuItem>
+            </Menu>
+          </div>
         </Toolbar>
       </AppBar>
       <Drawer

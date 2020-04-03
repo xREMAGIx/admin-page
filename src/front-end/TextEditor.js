@@ -1,9 +1,14 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Editor, EditorState, RichUtils } from "draft-js";
+import {
+  Editor,
+  EditorState,
+  RichUtils,
+  convertFromRaw,
+  convertToRaw
+} from "draft-js";
 import clsx from "clsx";
-import Container from "@material-ui/core/Container";
-import CustomDrawer from "./CustomDrawer";
+import TextField from "@material-ui/core/TextField";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -18,6 +23,12 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     height: "100vh",
     overflow: "auto"
+  },
+  titleInput: {
+    width: "100%",
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(4),
+    backgroundColor: "#fff"
   },
   editorRoot: {
     background: "#fff",
@@ -75,6 +86,11 @@ const useStyles = makeStyles(theme => ({
     fontSize: "14px",
     marginBottom: "5px",
     userSelect: "none"
+  },
+  postBtn: {
+    display: "flex",
+    margin: theme.spacing(2),
+    justifyContent: "flex-end"
   }
 }));
 
@@ -177,11 +193,14 @@ const InlineStyleControls = props => {
   );
 };
 
-export default function TextEditor() {
+//const editorStateAsJSONString = `{"entityMap":{},"blocks":[{"key":"1qh1g","text":"Header","type":"header-two","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}},{"key":"fthtl","text":"text text text","type":"unstyled","depth":0,"inlineStyleRanges":[],"entityRanges":[],"data":{}}]}`;
+
+export default function TextEditor(props) {
   const classes = useStyles();
   const [editorState, setEditorState] = React.useState(
     EditorState.createEmpty()
   );
+  const [title, setTitle] = React.useState("");
 
   const editor = React.useRef(null);
 
@@ -190,12 +209,40 @@ export default function TextEditor() {
   }
 
   React.useEffect(() => {
+    if (props.content !== undefined && props.content !== "") {
+      setEditorState(
+        EditorState.createWithContent(convertFromRaw(JSON.parse(props.content)))
+      );
+    }
+    //setContentJsonString(props.content);
     focusEditor();
-  }, []);
+  }, [props.content]);
+
+  // React.useEffect(() => {
+  //   console.log(contentJsonString);
+  //   if (contentJsonString !== "") {
+  //     setEditorState(
+  //       EditorState.createWithContent(
+  //         convertFromRaw(JSON.parse(contentJsonString))
+  //       )
+  //     );
+  //   }
+  //   //setContentJsonString(props.content);
+  // }, [contentJsonString]);
 
   const onChange = editorState => {
     setEditorState(editorState);
+    props.onChange(
+      JSON.stringify(convertToRaw(editorState.getCurrentContent()))
+    );
+    //props.onChange(convertToRaw(editorState.getCurrentContent()));
   };
+
+  const onTitleChange = newValue => {
+    setTitle(newValue);
+    props.onTitleChange(newValue);
+  };
+
   const _handleKeyCommand = command => {
     const newState = RichUtils.handleKeyCommand(editorState, command);
     if (newState) {
@@ -218,49 +265,56 @@ export default function TextEditor() {
     onChange(RichUtils.toggleInlineStyle(editorState, inlineStyle));
   };
 
+  const _handleButtonClick = () => {
+    console.log(JSON.stringify(convertToRaw(editorState.getCurrentContent())));
+    console.log(title);
+  };
+
   return (
     <React.Fragment>
-      <div className={classes.root}>
-        <CustomDrawer />
-        <main className={classes.content}>
-          <div className={classes.appBarSpacer} />
-          <Container maxWidth="lg" className={classes.container}>
-            <div className={classes.editorRoot}>
-              <BlockStyleControls
-                editorState={editorState}
-                onToggle={_toggleBlockType}
-              />
-              <InlineStyleControls
-                editorState={editorState}
-                onToggle={_toggleInlineStyle}
-              />
-              <div
-                className={clsx(classes.editor, {
-                  [classes.hidePlaceholder]:
-                    !editorState.getCurrentContent().hasText() &&
-                    editorState
-                      .getCurrentContent()
-                      .getBlockMap()
-                      .first()
-                      .getType() !== "unstyled"
-                })}
-                onClick={focusEditor}
-              >
-                <Editor
-                  blockStyleFn={getBlockStyle}
-                  customStyleMap={styleMap}
-                  editorState={editorState}
-                  handleKeyCommand={_handleKeyCommand}
-                  onChange={editorState => onChange(editorState)}
-                  onTab={_onTab}
-                  placeholder="Write something..."
-                  ref={editor}
-                  spellCheck={true}
-                />
-              </div>
-            </div>
-          </Container>
-        </main>
+      <TextField
+        className={classes.titleInput}
+        required
+        id="title-required"
+        label="Title"
+        variant="outlined"
+        onChange={e => onTitleChange(e.target.value)}
+        value={props.title}
+      />
+      <div className={classes.editorRoot}>
+        <button onClick={_handleButtonClick}>Log editor state</button>
+        <BlockStyleControls
+          editorState={editorState}
+          onToggle={_toggleBlockType}
+        />
+        <InlineStyleControls
+          editorState={editorState}
+          onToggle={_toggleInlineStyle}
+        />
+        <div
+          className={clsx(classes.editor, {
+            [classes.hidePlaceholder]:
+              !editorState.getCurrentContent().hasText() &&
+              editorState
+                .getCurrentContent()
+                .getBlockMap()
+                .first()
+                .getType() !== "unstyled"
+          })}
+          onClick={focusEditor}
+        >
+          <Editor
+            blockStyleFn={getBlockStyle}
+            customStyleMap={styleMap}
+            editorState={editorState}
+            handleKeyCommand={_handleKeyCommand}
+            onChange={editorState => onChange(editorState)}
+            onTab={_onTab}
+            placeholder="Write something..."
+            ref={editor}
+            spellCheck={true}
+          />
+        </div>
       </div>
     </React.Fragment>
   );

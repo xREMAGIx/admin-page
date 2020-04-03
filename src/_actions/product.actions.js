@@ -85,7 +85,7 @@ function update(id, product, image) {
   return async dispatch => {
     dispatch(request(id));
     await productService.update(id, product, image).then(
-      id => {
+      product => {
         dispatch(success(id));
         history.push("/products");
         //window.location.reload();
@@ -99,13 +99,13 @@ function update(id, product, image) {
   };
 
   function request(id) {
-    return { type: productConstants.ADD_REQUEST, id };
+    return { type: productConstants.UPDATE_REQUEST, id };
   }
   function success(id) {
-    return { type: productConstants.ADD_SUCCESS, id };
+    return { type: productConstants.UPDATE_SUCCESS, id };
   }
   function failure(error) {
-    return { type: productConstants.ADD_FAILURE, id, error };
+    return { type: productConstants.UPDATE_FAILURE, id, error };
   }
 }
 

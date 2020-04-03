@@ -45,16 +45,17 @@ export function products(
     case productConstants.UPDATE_REQUEST:
       return {
         ...state,
-        items: state.items.map(product =>
-          product.id === action.id ? { ...product, updating: true } : product
-        )
+        // items: state.items.map(product =>
+        //   product.id === action.id ? { ...product, updating: true } : product
+        // )
+        updating: true
       };
     case productConstants.UPDATE_SUCCESS:
       return {
-        ...state,
-        items: state.items.map(product =>
-          product.id === action.id ? { ...product, updating: false } : product
-        )
+        //...state,
+        // items: state.items.map(product =>
+        //   product._id === action.id ? { ...product, updating: false } : product
+        // )
       };
     case productConstants.UPDATE_FAILURE:
       return { error: action.error };
