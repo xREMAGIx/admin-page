@@ -34,7 +34,7 @@ function dateFormat(date) {
     hour: "numeric",
     year: "numeric",
     month: "2-digit",
-    day: "2-digit"
+    day: "2-digit",
   }).format(new Date(date));
 }
 
@@ -61,7 +61,7 @@ function stableSort(array, comparator) {
     if (order !== 0) return order;
     return a[1] - b[1];
   });
-  return stabilizedThis.map(el => el[0]);
+  return stabilizedThis.map((el) => el[0]);
 }
 
 const headCells = [
@@ -69,26 +69,26 @@ const headCells = [
     id: "title",
     numeric: false,
     disablePadding: true,
-    label: "Title Post"
+    label: "Title Post",
   },
   {
     id: "content",
     numeric: false,
     disablePadding: true,
-    label: "Content"
+    label: "Content",
   },
   {
     id: "updateAt",
     numeric: false,
     disablePadding: true,
-    label: "Update At"
+    label: "Update At",
   },
   {
     id: "createAt",
     numeric: false,
     disablePadding: true,
-    label: "Create At"
-  }
+    label: "Create At",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -99,9 +99,9 @@ function EnhancedTableHead(props) {
     orderBy,
     numSelected,
     rowCount,
-    onRequestSort
+    onRequestSort,
   } = props;
-  const createSortHandler = property => event => {
+  const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
 
@@ -116,7 +116,7 @@ function EnhancedTableHead(props) {
             inputProps={{ "aria-label": "select all " }}
           />
         </TableCell>
-        {headCells.map(headCell => (
+        {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
@@ -149,40 +149,40 @@ EnhancedTableHead.propTypes = {
   onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  rowCount: PropTypes.number.isRequired,
 };
 
-const useToolbarStyles = makeStyles(theme => ({
+const useToolbarStyles = makeStyles((theme) => ({
   root: {
     paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1)
+    paddingRight: theme.spacing(1),
   },
   highlight:
     theme.palette.type === "light"
       ? {
           color: theme.palette.secondary.main,
-          backgroundColor: lighten(theme.palette.secondary.light, 0.85)
+          backgroundColor: lighten(theme.palette.secondary.light, 0.85),
         }
       : {
           color: theme.palette.text.primary,
-          backgroundColor: theme.palette.secondary.dark
+          backgroundColor: theme.palette.secondary.dark,
         },
   title: {
-    flex: "1 1 100%"
+    flex: "1 1 100%",
   },
   search: {
     position: "relative",
     borderRadius: theme.shape.borderRadius,
     backgroundColor: fade(theme.palette.common.white, 0.15),
     "&:hover": {
-      backgroundColor: fade(theme.palette.common.white, 0.25)
+      backgroundColor: fade(theme.palette.common.white, 0.25),
     },
     marginLeft: 0,
     width: "100%",
     [theme.breakpoints.up("sm")]: {
       marginLeft: theme.spacing(1),
-      width: "auto"
-    }
+      width: "auto",
+    },
   },
   searchIcon: {
     padding: theme.spacing(0, 2),
@@ -191,10 +191,10 @@ const useToolbarStyles = makeStyles(theme => ({
     pointerEvents: "none",
     display: "flex",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   inputRoot: {
-    color: "inherit"
+    color: "inherit",
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
@@ -205,19 +205,19 @@ const useToolbarStyles = makeStyles(theme => ({
     [theme.breakpoints.up("sm")]: {
       width: "12ch",
       "&:focus": {
-        width: "20ch"
-      }
-    }
-  }
+        width: "20ch",
+      },
+    },
+  },
 }));
 
-const EnhancedTableToolbar = props => {
+const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected, selectedIndex } = props;
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
-  const onDelete = id => {
+  const onDelete = (id) => {
     dispatch(postActions.delete(id));
   };
 
@@ -225,7 +225,7 @@ const EnhancedTableToolbar = props => {
     <React.Fragment>
       <Toolbar
         className={clsx(classes.root, {
-          [classes.highlight]: numSelected > 0
+          [classes.highlight]: numSelected > 0,
         })}
       >
         {numSelected > 0 ? (
@@ -283,7 +283,7 @@ const EnhancedTableToolbar = props => {
                   placeholder="Search…"
                   classes={{
                     root: classes.inputRoot,
-                    input: classes.inputInput
+                    input: classes.inputInput,
                   }}
                   inputProps={{ "aria-label": "search" }}
                 />
@@ -304,28 +304,28 @@ const EnhancedTableToolbar = props => {
 };
 
 EnhancedTableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired
+  numSelected: PropTypes.number.isRequired,
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   mainContainer: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   table: {
-    minWidth: 750
+    minWidth: 750,
   },
   tableContainer: {
-    maxHeight: "60vh"
+    maxHeight: "60vh",
   },
   visuallyHidden: {
     border: 0,
@@ -336,12 +336,12 @@ const useStyles = makeStyles(theme => ({
     padding: 0,
     position: "absolute",
     top: 20,
-    width: 1
+    width: 1,
   },
   img: {
     maxHeight: 50,
-    maxWidth: 100
-  }
+    maxWidth: 100,
+  },
 }));
 
 export default function Posts() {
@@ -351,13 +351,13 @@ export default function Posts() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const posts = useSelector(state => state.posts);
+  const posts = useSelector((state) => state.posts);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(postActions.getAll());
-  }, [dispatch]);
+  }, []);
 
   // useEffect(() => {
   //   console.log(JSON.parse(posts.items[0].content));
@@ -369,9 +369,9 @@ export default function Posts() {
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = event => {
+  const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = posts.items.map(n => n._id);
+      const newSelecteds = posts.items.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -402,12 +402,12 @@ export default function Posts() {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = event => {
+  const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
 
-  const isSelected = name => selected.indexOf(name) !== -1;
+  const isSelected = (name) => selected.indexOf(name) !== -1;
 
   // const emptyRows =
   //   rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -455,7 +455,7 @@ export default function Posts() {
                         return (
                           <TableRow
                             hover
-                            onClick={event => handleClick(event, row._id)}
+                            onClick={(event) => handleClick(event, row._id)}
                             role="checkbox"
                             aria-checked={isItemSelected}
                             tabIndex={-1}

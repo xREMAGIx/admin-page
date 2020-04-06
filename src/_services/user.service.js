@@ -8,14 +8,15 @@ export const userService = {
   getAll,
   getById,
   update,
-  delete: _delete
+  delete: _delete,
+  getMe,
 };
 
 async function login(user) {
   const requestConfig = {
     headers: {
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const body = JSON.stringify(user);
@@ -32,15 +33,20 @@ async function login(user) {
     .then(handleResponse);
 }
 
-function logout() {
+async function getMe() {
+  return await axios.get(`/api/auth/me`).then(handleResponse);
+}
+
+async function logout() {
   // remove user from local storage to log user out
+  await axios.post("/api/auth/logout");
   localStorage.removeItem("user");
 }
 
 function getAll() {
   const requestOptions = {
     method: "GET",
-    headers: authHeader()
+    headers: authHeader(),
   };
 
   return fetch(`/api/users`, requestOptions).then(handleResponse);
@@ -49,7 +55,7 @@ function getAll() {
 function getById(id) {
   const requestOptions = {
     method: "GET",
-    headers: authHeader()
+    headers: authHeader(),
   };
 
   return fetch(`/api/users/${id}`, requestOptions).then(handleResponse);
@@ -59,7 +65,7 @@ function register(user) {
   const requestOptions = {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   return fetch(`/api/users/register`, requestOptions).then(handleResponse);
@@ -69,7 +75,7 @@ function update(user) {
   const requestOptions = {
     method: "PUT",
     headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(user)
+    body: JSON.stringify(user),
   };
 
   return fetch(`/api/users/${user.id}`, requestOptions).then(handleResponse);
@@ -79,7 +85,7 @@ function update(user) {
 function _delete(id) {
   const requestOptions = {
     method: "DELETE",
-    headers: authHeader()
+    headers: authHeader(),
   };
 
   return fetch(`/api/users/${id}`, requestOptions).then(handleResponse);

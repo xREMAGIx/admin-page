@@ -8,34 +8,52 @@ export const userActions = {
   logout,
   register,
   getAll,
-  delete: _delete
+  delete: _delete,
+  getMe,
 };
 
+function getMe() {
+  return (dispatch) => {
+    dispatch({ type: userConstants.LOGIN_REQUEST });
+
+    userService.getMe().then(
+      (user) => {
+        console.log("Get me " + user);
+        dispatch({ type: userConstants.LOGIN_SUCCESS, user });
+      },
+      (error) => {
+        dispatch({ type: userConstants.LOGIN_FAILURE, error });
+        //dispatch(alertActions.error(error.toString()));
+      }
+    );
+  };
+}
+
 function login(user) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request({ user }));
 
     userService.login(user).then(
-      user => {
+      (user) => {
         dispatch(success(user));
         history.push("/dashboard");
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
     );
   };
+}
 
-  function request(user) {
-    return { type: userConstants.LOGIN_REQUEST, user };
-  }
-  function success(user) {
-    return { type: userConstants.LOGIN_SUCCESS, user };
-  }
-  function failure(error) {
-    return { type: userConstants.LOGIN_FAILURE, error };
-  }
+function request(user) {
+  return { type: userConstants.LOGIN_REQUEST, user };
+}
+function success(user) {
+  return { type: userConstants.LOGIN_SUCCESS, user };
+}
+function failure(error) {
+  return { type: userConstants.LOGIN_FAILURE, error };
 }
 
 function logout() {
@@ -44,16 +62,16 @@ function logout() {
 }
 
 function register(user) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request(user));
 
     userService.register(user).then(
-      user => {
+      (user) => {
         dispatch(success());
         history.push("/login");
         dispatch(alertActions.success("Registration successful"));
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         dispatch(alertActions.error(error.toString()));
       }
@@ -72,12 +90,12 @@ function register(user) {
 }
 
 function getAll() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request());
 
     userService.getAll().then(
-      users => dispatch(success(users)),
-      error => dispatch(failure(error.toString()))
+      (users) => dispatch(success(users)),
+      (error) => dispatch(failure(error.toString()))
     );
   };
 
@@ -94,12 +112,12 @@ function getAll() {
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request(id));
 
     userService.delete(id).then(
-      user => dispatch(success(id)),
-      error => dispatch(failure(id, error.toString()))
+      (user) => dispatch(success(id)),
+      (error) => dispatch(failure(id, error.toString()))
     );
   };
 

@@ -1,9 +1,9 @@
-import React from "react";
-
+import React, { useEffect } from "react";
+import { useSelector, connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 const AdminRoute = ({ component: Component, user, ...rest }) => {
-  //const user = useSelector((state) => state.users);
+  const users = useSelector((state) => state.users);
 
   return (
     <Route
@@ -16,10 +16,11 @@ const AdminRoute = ({ component: Component, user, ...rest }) => {
         // ) : (
         //   <Component {...rest} {...props}></Component>
         // )
-        if (!user.isAuthenticated && !user.loading) {
+
+        if (users && !users.isAuthenticated && !users.loading) {
           return <Redirect to="/"></Redirect>;
-        } else if (!user) {
-          return console.log(user) && <Redirect to="/"></Redirect>;
+        } else if (!users) {
+          return console.log("con cac " + user) && <Redirect to="/"></Redirect>;
         } else return <Component {...rest} {...props}></Component>;
       }}
     ></Route>
