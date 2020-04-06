@@ -10,35 +10,58 @@ import ProductsEdit from "./front-end/ProductsEdit";
 import Login from "./front-end/Login";
 import Register from "./front-end/Register";
 import { history } from "./_helpers";
-import TextEditor from "./front-end/TextEditor";
 import Banner from "./front-end/Banner";
 import Posts from "./front-end/Posts";
 import PostsAdd from "./front-end/PostsAdd";
 import PostsEdit from "./front-end/PostsEdit";
+import AdminRoute from "./front-end/routings/AdminRoute";
+import { useSelector } from "react-redux";
 
-const App = ({ store }) => (
-  <Provider store={store}>
+const App = () => {
+  const user = useSelector((state) => state.users);
+  return (
+    // <Provider store={store}>
     <Router history={history}>
       <Switch>
         <Route exact path="/" component={Login}></Route>
         <Route exact path="/register" component={Register}></Route>
-        <Route exact path="/dashboard" component={Dashboard}></Route>
-        <Route exact path="/products" component={Products}></Route>
-        <Route exact path="/products-edit/:id" component={ProductsEdit}></Route>
-        <Route exact path="/orders" component={Orders}></Route>
-        <Route exact path="/posts" component={Posts}></Route>
-        <Route exact path="/posts-add" component={PostsAdd}></Route>
-        <Route exact path="/posts-edit/:id" component={PostsEdit}></Route>
-        <Route exact path="/text-editor" component={TextEditor}></Route>
-        <Route exact path="/banner" component={Banner}></Route>
-        <Route render={() => <h1>404: page not found</h1>} />
+        {console.log(user)}
+        <AdminRoute
+          exact
+          path="/dashboard"
+          user={user}
+          component={Dashboard}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/products"
+          user={user}
+          component={Products}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/products-edit/:id"
+          component={ProductsEdit}
+        ></AdminRoute>
+        <AdminRoute exact path="/orders" component={Orders}></AdminRoute>
+        <AdminRoute exact path="/posts" component={Posts}></AdminRoute>
+        <AdminRoute exact path="/posts-add" component={PostsAdd}></AdminRoute>
+        <AdminRoute
+          exact
+          path="/posts-edit/:id"
+          component={PostsEdit}
+        ></AdminRoute>
+        {/* <Route exact path="/text-editor" component={TextEditor}></Route> */}
+        <AdminRoute exact path="/banner" component={Banner}></AdminRoute>
+        <AdminRoute render={() => <h1>404: page not found</h1>} />
       </Switch>
     </Router>
-  </Provider>
-);
+    // </Provider>
+  );
+};
 
 App.propTypes = {
-  store: PropTypes.object.isRequired
+  store: PropTypes.object.isRequired,
 };
 
 export default App;

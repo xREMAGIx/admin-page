@@ -27,7 +27,16 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 
-//const dateFormat = { day: "numeric", month: "long", year: "numeric" };
+function dateFormat(date) {
+  return new Intl.DateTimeFormat("en-GB", {
+    second: "numeric",
+    minute: "numeric",
+    hour: "numeric",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).format(new Date(date));
+}
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -471,31 +480,11 @@ export default function Posts() {
                               {JSON.parse(row.content).blocks[0].text}
                             </TableCell>
                             <TableCell scope="row" padding="none">
-                              {row.updateAt}
+                              {dateFormat(row.updatedAt)}
                             </TableCell>
                             <TableCell scope="row" padding="none">
-                              {row.createAt}
+                              {dateFormat(row.createdAt)}
                             </TableCell>
-                            {/* 
-                            <TableCell padding="none">
-                              {row.images.length > 0 ? (
-                                <img
-                                  className={classes.img}
-                                  src={
-                                    "http://localhost:5000/uploads/" +
-                                    row.images[0].path
-                                  }
-                                  alt="broken"
-                                />
-                              ) : null}
-                            </TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="right">{row.size}</TableCell>
-                            <TableCell align="right">{row.discount}%</TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.description}
-                            </TableCell>
-                            <TableCell align="left">{row.createAt}</TableCell> */}
                           </TableRow>
                         );
                       })}

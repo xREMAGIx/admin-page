@@ -15,7 +15,9 @@ function getAll() {
     dispatch(request());
 
     postService.getAll().then(
-      posts => dispatch(success(posts)),
+      posts => {
+        dispatch(success(posts));
+      },
       error => dispatch(failure(error.toString()))
     );
   };

@@ -1,4 +1,5 @@
 import { authHeader } from "../_helpers";
+import axios from "axios";
 
 export const userService = {
   login,
@@ -10,21 +11,25 @@ export const userService = {
   delete: _delete
 };
 
-function login(username, password) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password })
+async function login(user) {
+  const requestConfig = {
+    headers: {
+      "Content-Type": "application/json"
+    }
   };
 
-  return fetch(`/api/users/authenticate`, requestOptions)
-    .then(handleResponse)
-    .then(user => {
-      // store user details and jwt token in local storage to keep user logged in between page refreshes
-      localStorage.setItem("user", JSON.stringify(user));
+  const body = JSON.stringify(user);
 
-      return user;
-    });
+  let res;
+  try {
+    res = await axios.post(`/api/auth/login`, body, requestConfig);
+  } catch (error) {
+    console.log(error);
+  }
+
+  return await axios
+    .get(`/api/auth/me`, res.data, requestConfig)
+    .then(handleResponse);
 }
 
 function logout() {
@@ -81,19 +86,17 @@ function _delete(id) {
 }
 
 function handleResponse(response) {
-  return response.text().then(text => {
-    const data = text && JSON.parse(text);
-    if (!response.ok) {
-      if (response.status === 401) {
-        // auto logout if 401 response returned from api
-        logout();
-        // location.reload(true);
-      }
+  const data = response.data.data;
+  if (response.status !== 200) {
+    // if (response.status === 401) {
+    //   // auto logout if 401 response returned from api
+    //   //logout();
+    //   location.reload(true);
+    // }
 
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
+    const error = (data && data.message) || response.statusText;
+    return Promise.reject(error);
+  }
 
-    return data;
-  });
+  return data;
 }

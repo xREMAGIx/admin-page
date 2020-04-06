@@ -11,18 +11,18 @@ export const userActions = {
   delete: _delete
 };
 
-function login(username, password) {
+function login(user) {
   return dispatch => {
-    dispatch(request({ username }));
+    dispatch(request({ user }));
 
-    userService.login(username, password).then(
+    userService.login(user).then(
       user => {
         dispatch(success(user));
-        history.push("/");
+        history.push("/dashboard");
       },
       error => {
         dispatch(failure(error.toString()));
-        dispatch(alertActions.error(error.toString()));
+        //dispatch(alertActions.error(error.toString()));
       }
     );
   };

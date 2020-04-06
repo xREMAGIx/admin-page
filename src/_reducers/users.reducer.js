@@ -1,7 +1,28 @@
 import { userConstants } from "../_constants";
 
-export function users(state = {}, action) {
+const initialState = {
+  loading: false,
+  isAuthenticated: false,
+  user: null
+};
+
+export function users(state = initialState, action) {
   switch (action.type) {
+    case userConstants.LOGIN_REQUEST:
+      return {
+        loading: true,
+        user: action.user
+      };
+    case userConstants.LOGIN_SUCCESS:
+      return {
+        loading: false,
+        isAuthenticated: true,
+        user: action.user
+      };
+    case userConstants.LOGIN_FAILURE:
+      return { error: action.error };
+    case userConstants.LOGOUT:
+      return {};
     case userConstants.GETALL_REQUEST:
       return {
         loading: true

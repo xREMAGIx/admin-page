@@ -7,10 +7,11 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
-import TextFormatIcon from "@material-ui/icons/TextFormat";
+//import TextFormatIcon from "@material-ui/icons/TextFormat";
 import PanoramaIcon from "@material-ui/icons/Panorama";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
+import { history } from "../_helpers";
 
 export const mainListItems = (
   <div>
@@ -20,7 +21,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Dashboard" />
     </ListItem>
-    <ListItem button component="a" href="/products">
+    <ListItem button component="a" onClick={() => history.push("/products")}>
       <ListItemIcon>
         <FastfoodIcon />
       </ListItemIcon>
@@ -56,12 +57,12 @@ export const mainListItems = (
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Store page</ListSubheader>
-    <ListItem button component="a" href="/text-editor">
+    {/* <ListItem button component="a" href="/text-editor">
       <ListItemIcon>
         <TextFormatIcon />
       </ListItemIcon>
       <ListItemText primary="Text Editor" />
-    </ListItem>
+    </ListItem> */}
     <ListItem button component="a" href="/banner">
       <ListItemIcon>
         <PanoramaIcon />

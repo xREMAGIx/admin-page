@@ -12,6 +12,8 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { useDispatch, useSelector } from "react-redux";
+import { userActions } from "../_actions";
 import axios from "axios";
 
 function Copyright() {
@@ -55,6 +57,9 @@ export default function SignIn() {
     password: ""
   });
 
+  const users = useSelector(state => state.users);
+  const dispatch = useDispatch();
+
   const { email, password } = formData;
 
   const onChange = e => {
@@ -62,21 +67,35 @@ export default function SignIn() {
     console.log(e.target.value);
   };
 
-  const onSubmit = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    };
+  const onSubmit = () => {
+    // const config = {
+    //   headers: {
+    //     "Content-Type": "application/json"
+    //   }
+    // };
 
-    const body = JSON.stringify(formData);
-    try {
-      const res = await axios.post("/api/auth/login", body, config);
-      console.log(res.data);
-      console.log("OK");
-    } catch (error) {
-      console.log("fail");
-    }
+    // const body = JSON.stringify(formData);
+    // var user = null;
+    // var res = null;
+
+    // try {
+    //   res = await axios.post("/api/auth/login", body, config);
+
+    //   console.log(res);
+
+    //   console.log("OK");
+    // } catch (error) {
+    //   console.log("fail");
+    // }
+
+    // try {
+    //   user = await axios.get("/api/auth/me", res.data, config);
+    //   // .then(res => (user = res.data.data));
+    //   console.log(user);
+    // } catch (error) {
+    //   console.log(error);
+    // }
+    dispatch(userActions.login(formData));
   };
 
   return (
