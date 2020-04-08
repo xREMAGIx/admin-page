@@ -369,7 +369,6 @@ export default function Products() {
 
   useEffect(() => {
     dispatch(productActions.getAll());
-    console.log("Product " + products);
   }, [dispatch]);
 
   const products = useSelector((state) => state.products);

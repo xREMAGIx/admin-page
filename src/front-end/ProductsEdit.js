@@ -86,7 +86,12 @@ export default function ProductEdit(props) {
 
   const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setImage(event.target.files[0]);
+      let images = [];
+      for (let i = 0; i < event.target.files.length; i++) {
+        images.push(event.target.files[i]);
+      }
+      console.log(images);
+      setImage(images);
     }
   };
 
@@ -274,14 +279,15 @@ export default function ProductEdit(props) {
                             />
                           </GridListTile>
                         ))}
-                      {image && (
-                        <GridListTile
-                          style={{ width: "100%" }}
-                          component="image"
-                        >
-                          <img src={URL.createObjectURL(image)} alt="broken" />
-                        </GridListTile>
-                      )}
+                      {image &&
+                        image.map((item) => (
+                          <GridListTile
+                            style={{ width: "100%" }}
+                            component="image"
+                          >
+                            <img src={URL.createObjectURL(item)} alt="broken" />
+                          </GridListTile>
+                        ))}
                     </GridList>
                   </Grid>
                 </Grid>

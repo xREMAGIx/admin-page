@@ -22,7 +22,12 @@ export function users(state = initialState, action) {
     case userConstants.LOGIN_FAILURE:
       return { error: action.error };
     case userConstants.LOGOUT:
-      return {};
+      return {
+        ...state,
+        loading: true,
+        isAuthenticated: false,
+        user: null,
+      };
     case userConstants.GETALL_REQUEST:
       return {
         loading: true,

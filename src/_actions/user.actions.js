@@ -58,6 +58,7 @@ function failure(error) {
 
 function logout() {
   userService.logout();
+  window.location.reload();
   return { type: userConstants.LOGOUT };
 }
 

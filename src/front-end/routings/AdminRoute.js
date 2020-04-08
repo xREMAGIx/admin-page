@@ -17,10 +17,10 @@ const AdminRoute = ({ component: Component, user, ...rest }) => {
         //   <Component {...rest} {...props}></Component>
         // )
 
-        if (users && !users.isAuthenticated && !users.loading) {
+        if (!users.isAuthenticated && !users.loading) {
           return <Redirect to="/"></Redirect>;
         } else if (!users) {
-          return console.log("con cac " + user) && <Redirect to="/"></Redirect>;
+          return <Redirect to="/"></Redirect>;
         } else return <Component {...rest} {...props}></Component>;
       }}
     ></Route>

@@ -6,7 +6,7 @@ export const productService = {
   getById,
   add,
   update,
-  delete: _delete
+  delete: _delete,
 };
 
 async function getAll() {
@@ -19,7 +19,7 @@ async function getAll() {
 
 async function getById(id) {
   const requestConfig = {
-    headers: authHeader()
+    headers: authHeader(),
   };
   return await axios
     .get(`/api/products/${id}`, requestConfig)
@@ -33,8 +33,8 @@ async function add(product, image) {
   const requestConfig = {
     headers: {
       //authHeader(),
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const body = JSON.stringify(product);
@@ -50,8 +50,8 @@ async function add(product, image) {
 
     const configFormData = {
       headers: {
-        "Content-Type": "multipart/form-data"
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
     try {
       return await axios
@@ -73,13 +73,16 @@ async function add(product, image) {
 
 async function update(id, product, image) {
   const imageData = new FormData();
-  imageData.append("image", image);
+
+  for (let i = 0; i < image.length; i++) imageData.append("image", image[i]);
+
+  console.log("image data " + imageData);
 
   const requestConfig = {
     headers: {
       //authHeader(),
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const body = JSON.stringify(product);
@@ -93,8 +96,8 @@ async function update(id, product, image) {
 
     const configFormData = {
       headers: {
-        "Content-Type": "multipart/form-data"
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
     try {
       return await axios

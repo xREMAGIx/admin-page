@@ -7,16 +7,16 @@ export const productActions = {
   getAll,
   getById,
   update,
-  delete: _delete
+  delete: _delete,
 };
 
 function getAll() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request());
 
     productService.getAll().then(
-      products => dispatch(success(products)),
-      error => dispatch(failure(error.toString()))
+      (products) => dispatch(success(products)),
+      (error) => dispatch(failure(error.toString()))
     );
   };
 
@@ -32,11 +32,11 @@ function getAll() {
 }
 
 function getById(id) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request(id));
     productService.getById(id).then(
-      products => dispatch(success(products)),
-      error => dispatch(failure(error.toString()))
+      (products) => dispatch(success(products)),
+      (error) => dispatch(failure(error.toString()))
     );
   };
 
@@ -52,18 +52,18 @@ function getById(id) {
 }
 
 function add(product, image) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(product));
     await productService.add(product, image).then(
-      product => {
+      (product) => {
         dispatch(success(product));
-        //history.push("/dashboard");
+        history.push("/dashboard");
         window.location.reload();
 
         //window.location.reload();
         //dispatch(alertActions.success("Add new product successful"));
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
@@ -82,16 +82,16 @@ function add(product, image) {
 }
 
 function update(id, product, image) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(id));
     await productService.update(id, product, image).then(
-      product => {
+      (product) => {
         dispatch(success(id));
-        history.push("/products");
+        //       history.push("/products");
         //window.location.reload();
         //dispatch(alertActions.success("Add new product successful"));
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
@@ -111,14 +111,14 @@ function update(id, product, image) {
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(id));
     await productService.delete(id).then(
-      id => {
+      (id) => {
         dispatch(success(id));
         window.location.reload();
       },
-      error => dispatch(failure(id, error.toString()))
+      (error) => dispatch(failure(id, error.toString()))
     );
   };
 
