@@ -1,30 +1,36 @@
 import { productConstants } from "../_constants";
 
 export function products(
-  state = { loading: false, adding: false, updating: false, items: [] },
+  state = {
+    loading: false,
+    adding: false,
+    updating: false,
+    items: [],
+    item: null,
+  },
   action
 ) {
   switch (action.type) {
     case productConstants.GETALL_REQUEST:
       return {
-        loading: true
+        loading: true,
       };
     case productConstants.GETALL_SUCCESS:
       return {
-        items: action.products
+        items: action.products,
       };
     case productConstants.GETALL_FAILURE:
       return {
-        error: action.error
+        error: action.error,
       };
 
     case productConstants.GETBYID_REQUEST:
       return {
-        loading: true
+        loading: true,
       };
     case productConstants.GETBYID_SUCCESS:
       return {
-        items: action.products
+        item: action.products,
       };
     case productConstants.GETBYID_ERROR:
       return { error: action.error };
@@ -48,7 +54,7 @@ export function products(
         // items: state.items.map(product =>
         //   product.id === action.id ? { ...product, updating: true } : product
         // )
-        updating: true
+        updating: true,
       };
     case productConstants.UPDATE_SUCCESS:
       return {
@@ -64,20 +70,20 @@ export function products(
       // add 'deleting:true' property to user being deleted
       return {
         ...state,
-        items: state.items.map(product =>
+        items: state.items.map((product) =>
           product.id === action.id ? { ...product, deleting: true } : product
-        )
+        ),
       };
     case productConstants.DELETE_SUCCESS:
       // remove deleted user from state
       return {
-        items: state.items.filter(product => product.id !== action.id)
+        items: state.items.filter((product) => product.id !== action.id),
       };
     case productConstants.DELETE_FAILURE:
       // remove 'deleting:true' property and add 'deleteError:[error]' property to user
       return {
         ...state,
-        items: state.items.map(product => {
+        items: state.items.map((product) => {
           if (product.id === action.id) {
             // make copy of user without 'deleting:true' property
             const { deleting, ...productCopy } = product;
@@ -86,7 +92,7 @@ export function products(
           }
 
           return product;
-        })
+        }),
       };
     default:
       return state;

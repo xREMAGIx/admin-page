@@ -17,28 +17,28 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { productActions } from "../_actions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   uploadRoot: {
     "& > *": {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   },
   input: {
-    display: "none"
-  }
+    display: "none",
+  },
 }));
 
 export default function ProductEdit(props) {
@@ -53,11 +53,11 @@ export default function ProductEdit(props) {
     description: "",
     price: 1,
     discount: 2,
-    size: 3
+    size: 3,
     //images: [],
   });
 
-  const products = useSelector(state => state.products);
+  const products = useSelector((state) => state.products);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
@@ -68,7 +68,7 @@ export default function ProductEdit(props) {
     description,
     price,
     discount,
-    size
+    size,
   } = formData;
 
   useEffect(() => {
@@ -80,17 +80,17 @@ export default function ProductEdit(props) {
   }, [dispatch, props.match.params.id]);
 
   useEffect(() => {
-    setFormData({ ...products.items });
+    setFormData({ ...products.item });
     //setOnImageChange({ ...formData.image });
-  }, [products.items]);
+  }, [products.item]);
 
-  const handleOnImageChange = event => {
+  const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setImage(event.target.files[0]);
     }
   };
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -105,7 +105,7 @@ export default function ProductEdit(props) {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {products.items && (
+          {products.item && (
             <Container maxWidth="lg" className={classes.container}>
               <Typography variant="h4" gutterBottom>
                 Product Edit
@@ -120,7 +120,7 @@ export default function ProductEdit(props) {
                       variant="outlined"
                       name="sku"
                       value={sku}
-                      onChange={e => onChange(e)}
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -131,7 +131,7 @@ export default function ProductEdit(props) {
                       variant="outlined"
                       name="productName"
                       value={productName}
-                      onChange={e => onChange(e)}
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -142,7 +142,7 @@ export default function ProductEdit(props) {
                       variant="outlined"
                       name="category"
                       value={category}
-                      onChange={e => onChange(e)}
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12}>
@@ -155,7 +155,7 @@ export default function ProductEdit(props) {
                       variant="outlined"
                       name="description"
                       value={description}
-                      onChange={e => onChange(e)}
+                      onChange={(e) => onChange(e)}
                     />
                   </Grid>
                   <Grid item xs={12} container spacing={2}>
@@ -172,7 +172,7 @@ export default function ProductEdit(props) {
                           id="outlined-adornment-price"
                           name="price"
                           value={price}
-                          onChange={e => onChange(e)}
+                          onChange={(e) => onChange(e)}
                           startAdornment={
                             <InputAdornment position="start">$</InputAdornment>
                           }
@@ -193,7 +193,7 @@ export default function ProductEdit(props) {
                           id="outlined-adornment-discount"
                           name="discount"
                           value={discount}
-                          onChange={e => onChange(e)}
+                          onChange={(e) => onChange(e)}
                           startAdornment={
                             <InputAdornment position="start">%</InputAdornment>
                           }
@@ -215,7 +215,7 @@ export default function ProductEdit(props) {
                         id="outlined-adornment-size"
                         name="size"
                         value={size}
-                        onChange={e => onChange(e)}
+                        onChange={(e) => onChange(e)}
                         startAdornment={
                           <InputAdornment position="start">Kg</InputAdornment>
                         }
@@ -263,7 +263,7 @@ export default function ProductEdit(props) {
                   <Grid item xs={12}>
                     <GridList className={classes.gri}>
                       {formData.images &&
-                        formData.images.map(item => (
+                        formData.images.map((item) => (
                           <GridListTile
                             style={{ width: "100%" }}
                             component="image"

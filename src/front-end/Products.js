@@ -3,7 +3,7 @@ import { lighten, makeStyles, fade } from "@material-ui/core/styles";
 import CustomDrawer from "./CustomDrawer";
 import { useDispatch, useSelector } from "react-redux";
 import { productActions } from "../_actions";
-
+import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import Table from "@material-ui/core/Table";
@@ -56,6 +56,7 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  console.log("CCCCCCCCCCCCCCCCCCCCCC " + JSON.stringify(array));
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -260,12 +261,14 @@ const EnhancedTableToolbar = (props) => {
             {numSelected < 2 ? (
               <Grid item>
                 <Tooltip title="Modify">
-                  <IconButton
-                    href={"/products-edit/" + selectedIndex[0]}
-                    aria-label="modify"
-                  >
-                    <CreateIcon />
-                  </IconButton>
+                  <Link to={"/products-edit/" + selectedIndex[0]}>
+                    <IconButton
+                      href={"/products-edit/" + selectedIndex[0]}
+                      aria-label="modify"
+                    >
+                      <CreateIcon />
+                    </IconButton>
+                  </Link>
                 </Tooltip>
               </Grid>
             ) : null}
@@ -360,14 +363,16 @@ export default function Products() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const products = useSelector((state) => state.products);
+
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(productActions.getAll());
+    console.log("Product " + products);
   }, [dispatch]);
 
+  const products = useSelector((state) => state.products);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");

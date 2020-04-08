@@ -356,8 +356,9 @@ export default function Posts() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    console.log("GET ALL POSTS");
     dispatch(postActions.getAll());
-  }, []);
+  }, [dispatch]);
 
   // useEffect(() => {
   //   console.log(JSON.parse(posts.items[0].content));

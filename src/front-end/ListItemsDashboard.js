@@ -12,33 +12,46 @@ import PanoramaIcon from "@material-ui/icons/Panorama";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
 import { history } from "../_helpers";
+import { Link } from "react-router-dom";
 
+// component
+import DashBoard from "./Dashboard";
 export const mainListItems = (
   <div>
-    <ListItem button component="a" href="/dashboard">
-      <ListItemIcon>
-        <DashboardIcon />
-      </ListItemIcon>
-      <ListItemText primary="Dashboard" />
-    </ListItem>
-    <ListItem button component="a" onClick={() => history.push("/products")}>
-      <ListItemIcon>
-        <FastfoodIcon />
-      </ListItemIcon>
-      <ListItemText primary="Products" />
-    </ListItem>
-    <ListItem button component="a" href="/orders">
-      <ListItemIcon>
-        <ShoppingCartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Orders" />
-    </ListItem>
-    <ListItem button component="a" href="/posts">
-      <ListItemIcon>
-        <AssignmentIcon />
-      </ListItemIcon>
-      <ListItemText primary="Posts" />
-    </ListItem>
+    <Link to="/Dashboard">
+      <ListItem button component="a">
+        <ListItemIcon>
+          <DashboardIcon />
+        </ListItemIcon>
+        <ListItemText primary="Dashboard" />
+      </ListItem>
+    </Link>
+
+    <Link to="/products">
+      <ListItem button component="a">
+        <ListItemIcon>
+          <FastfoodIcon />
+        </ListItemIcon>
+        <ListItemText primary="Products" />
+      </ListItem>
+    </Link>
+    <Link to="/orders">
+      <ListItem button component="a">
+        <ListItemIcon>
+          <ShoppingCartIcon />
+        </ListItemIcon>
+        <ListItemText primary="Orders" />
+      </ListItem>
+    </Link>
+    <Link to="/posts">
+      <ListItem button component="a">
+        <ListItemIcon>
+          <AssignmentIcon />
+        </ListItemIcon>
+        <ListItemText primary="Posts" />
+      </ListItem>
+    </Link>
+
     <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
