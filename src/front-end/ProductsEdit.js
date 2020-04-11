@@ -12,6 +12,10 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import GridList from "@material-ui/core/GridList";
 import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
+import { Link } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -32,19 +36,21 @@ const useStyles = makeStyles((theme) => ({
     paddingBottom: theme.spacing(4),
   },
   uploadRoot: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
+    margin: theme.spacing(1),
   },
   input: {
     display: "none",
+  },
+  gridList: {
+    height: "6 0vh",
   },
 }));
 
 export default function ProductEdit(props) {
   const classes = useStyles();
 
-  const [image, setImage] = React.useState(null);
+  const [image, setImage] = React.useState([]);
+  const [delImage, setDelImage] = React.useState([]);
 
   const [formData, setFormData] = useState({
     sku: "",
@@ -54,7 +60,7 @@ export default function ProductEdit(props) {
     price: 1,
     discount: 2,
     size: 3,
-    //images: [],
+    images: [],
   });
 
   const products = useSelector((state) => state.products);
@@ -95,17 +101,36 @@ export default function ProductEdit(props) {
     }
   };
 
+  const onDeleteBtn = (e) => {
+    setDelImage((delImage) => [...delImage, e.target.id]);
+    setFormData({
+      ...formData,
+      images: formData.images.filter((_image) => _image._id !== e.target.id),
+    });
+  };
+
+  const onDeleteNew = (e) => {
+    console.log(image);
+    console.log(e.target);
+    // setImage(
+    //   ...image,
+    //   image.filter((_image) => _image.id !== e.target.id)
+    // );
+  };
+
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const onSave = () => {
-    dispatch(productActions.update(props.match.params.id, formData, image));
+    console.log(formData);
+    dispatch(
+      productActions.update(props.match.params.id, formData, image, delImage)
+    );
   };
 
   return (
     <React.Fragment>
-      {" "}
       <div className={classes.root}>
         <CustomDrawer />
         <main className={classes.content}>
@@ -116,7 +141,7 @@ export default function ProductEdit(props) {
                 Product Edit
               </Typography>
               <Grid container direction="row" spacing={1}>
-                <Grid container item xs={6} spacing={3}>
+                <Grid container item xs={12} md={6} spacing={3}>
                   <Grid item xs={12}>
                     <TextField
                       fullWidth
@@ -228,22 +253,8 @@ export default function ProductEdit(props) {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item container spacing={5}>
-                    <Grid item>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => onSave()}
-                      >
-                        Save
-                      </Button>
-                    </Grid>
-                    <Grid item>
-                      <Button variant="contained">Cancel</Button>
-                    </Grid>
-                  </Grid>
                 </Grid>
-                <Grid container item xs={6}>
+                <Grid container item xs={12} md={6} justify="center">
                   <Grid item>
                     <div className={classes.uploadRoot}>
                       <input
@@ -265,31 +276,74 @@ export default function ProductEdit(props) {
                       </label>
                     </div>
                   </Grid>
-                  <Grid item xs={12}>
-                    <GridList className={classes.gri}>
+                  <Grid item>
+                    <GridList cellHeight={180} className={classes.gridList}>
                       {formData.images &&
                         formData.images.map((item) => (
                           <GridListTile
+                            key={item._id}
                             style={{ width: "100%" }}
-                            component="image"
                           >
                             <img
                               src={"http://localhost:5000/uploads/" + item.path}
-                              alt="broken"
+                              alt={"No data"}
+                            />
+                            <GridListTileBar
+                              title={item.path}
+                              actionIcon={
+                                <Button
+                                  id={item._id}
+                                  style={{ color: "red" }}
+                                  onClick={(e) => onDeleteBtn(e)}
+                                >
+                                  <Typography id={item._id}>Del</Typography>
+                                </Button>
+                              }
                             />
                           </GridListTile>
                         ))}
                       {image &&
                         image.map((item) => (
                           <GridListTile
+                            key={item.lastModified}
                             style={{ width: "100%" }}
-                            component="image"
                           >
-                            <img src={URL.createObjectURL(item)} alt="broken" />
+                            <img
+                              src={URL.createObjectURL(item)}
+                              alt={"No data"}
+                            />
+                            <GridListTileBar
+                              title={item.name}
+                              actionIcon={
+                                <Button
+                                  id={item._id}
+                                  style={{ color: "red" }}
+                                  onClick={(e) => onDeleteNew(e)}
+                                >
+                                  <Typography id={item._id}>Del</Typography>
+                                </Button>
+                              }
+                            />
                           </GridListTile>
                         ))}
                     </GridList>
                   </Grid>
+                </Grid>
+              </Grid>
+              <Grid container spacing={5}>
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => onSave()}
+                  >
+                    Save
+                  </Button>
+                </Grid>
+                <Grid item>
+                  <Button component={Link} to="/products" variant="contained">
+                    Cancel
+                  </Button>
                 </Grid>
               </Grid>
             </Container>

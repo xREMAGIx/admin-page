@@ -71,7 +71,7 @@ async function add(product, image) {
   }
 }
 
-async function update(id, product, image) {
+async function update(id, product, image, delImage) {
   const imageData = new FormData();
 
   for (let i = 0; i < image.length; i++) imageData.append("image", image[i]);
@@ -86,6 +86,21 @@ async function update(id, product, image) {
   };
 
   const body = JSON.stringify(product);
+
+  const requestConfig1 = {
+    // headers: authHeader()
+  };
+
+  for (let i = 0; i < delImage.length; i++)
+    try {
+      await axios.delete(
+        "/api/products/" + id + "/image/" + delImage[i],
+        imageData,
+        requestConfig1
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
   if (imageData.get("image")) {
     try {

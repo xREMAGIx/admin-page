@@ -57,7 +57,7 @@ function add(product, image) {
     await productService.add(product, image).then(
       (product) => {
         dispatch(success(product));
-        history.push("/dashboard");
+        //history.push("/products");
         window.location.reload();
 
         //window.location.reload();
@@ -81,13 +81,13 @@ function add(product, image) {
   }
 }
 
-function update(id, product, image) {
+function update(id, product, image, delImageId) {
   return async (dispatch) => {
     dispatch(request(id));
-    await productService.update(id, product, image).then(
+    await productService.update(id, product, image, delImageId).then(
       (product) => {
         dispatch(success(id));
-        //       history.push("/products");
+        history.push("/products");
         //window.location.reload();
         //dispatch(alertActions.success("Add new product successful"));
       },
