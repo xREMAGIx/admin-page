@@ -430,7 +430,6 @@ export default function Products() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {console.log(user)}
           {products.items && (
             <Container maxWidth="lg" className={classes.mainContainer}>
               <EnhancedTableToolbar

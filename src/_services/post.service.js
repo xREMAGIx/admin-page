@@ -6,7 +6,7 @@ export const postService = {
   getById,
   add,
   update,
-  delete: _delete
+  delete: _delete,
 };
 
 async function getAll() {
@@ -19,7 +19,7 @@ async function getAll() {
 
 async function getById(id) {
   const requestConfig = {
-    headers: authHeader()
+    headers: authHeader(),
   };
   return await axios
     .get(`/api/posts/${id}`, requestConfig)
@@ -33,8 +33,8 @@ async function add(post, image) {
   const requestConfig = {
     headers: {
       //authHeader(),
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   console.log(post);
@@ -51,8 +51,8 @@ async function add(post, image) {
 
     const configFormData = {
       headers: {
-        "Content-Type": "multipart/form-data"
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
     try {
       return await axios
@@ -79,8 +79,8 @@ async function update(id, post, image) {
   const requestConfig = {
     headers: {
       //authHeader(),
-      "Content-Type": "application/json"
-    }
+      "Content-Type": "application/json",
+    },
   };
 
   const body = JSON.stringify(post);
@@ -95,8 +95,8 @@ async function update(id, post, image) {
 
     const configFormData = {
       headers: {
-        "Content-Type": "multipart/form-data"
-      }
+        "Content-Type": "multipart/form-data",
+      },
     };
     try {
       return await axios

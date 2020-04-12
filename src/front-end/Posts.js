@@ -351,6 +351,7 @@ export default function Posts() {
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
   const posts = useSelector((state) => state.posts);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
@@ -421,6 +422,7 @@ export default function Posts() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
+          {console.log(posts.items)}
           {posts.items && (
             <Container maxWidth="lg" className={classes.mainContainer}>
               <EnhancedTableToolbar

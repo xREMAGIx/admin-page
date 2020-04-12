@@ -7,18 +7,18 @@ export const postActions = {
   getAll,
   getById,
   update,
-  delete: _delete
+  delete: _delete,
 };
 
 function getAll() {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request());
 
     postService.getAll().then(
-      posts => {
+      (posts) => {
         dispatch(success(posts));
       },
-      error => dispatch(failure(error.toString()))
+      (error) => dispatch(failure(error.toString()))
     );
   };
 
@@ -34,11 +34,11 @@ function getAll() {
 }
 
 function getById(id) {
-  return dispatch => {
+  return (dispatch) => {
     dispatch(request(id));
     postService.getById(id).then(
-      posts => dispatch(success(posts)),
-      error => dispatch(failure(error.toString()))
+      (posts) => dispatch(success(posts)),
+      (error) => dispatch(failure(error.toString()))
     );
   };
 
@@ -54,10 +54,10 @@ function getById(id) {
 }
 
 function add(post, image) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(post));
     await postService.add(post, image).then(
-      post => {
+      (post) => {
         dispatch(success(post));
         history.push("/posts");
         //history.push("/dashboard");
@@ -66,7 +66,7 @@ function add(post, image) {
         //window.location.reload();
         //dispatch(alertActions.success("Add new post successful"));
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
@@ -85,17 +85,16 @@ function add(post, image) {
 }
 
 function update(id, post, image) {
-  console.log(post);
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(id));
     await postService.update(id, post, image).then(
-      post => {
+      (post) => {
         dispatch(success(id));
         history.push("/posts");
         //window.location.reload();
         //dispatch(alertActions.success("Add new post successful"));
       },
-      error => {
+      (error) => {
         dispatch(failure(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
@@ -115,14 +114,14 @@ function update(id, post, image) {
 
 // prefixed function name with underscore because delete is a reserved word in javascript
 function _delete(id) {
-  return async dispatch => {
+  return async (dispatch) => {
     dispatch(request(id));
     await postService.delete(id).then(
-      id => {
+      (id) => {
         dispatch(success(id));
         window.location.reload();
       },
-      error => dispatch(failure(id, error.toString()))
+      (error) => dispatch(failure(id, error.toString()))
     );
   };
 
