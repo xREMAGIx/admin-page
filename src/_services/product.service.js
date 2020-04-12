@@ -28,7 +28,9 @@ async function getById(id) {
 
 async function add(product, image) {
   const imageData = new FormData();
-  imageData.append("image", image);
+
+  for (let i = 0; i < image.length; i++)
+    imageData.append("image", image[i].img);
 
   const requestConfig = {
     headers: {
@@ -74,7 +76,8 @@ async function add(product, image) {
 async function update(id, product, image, delImage) {
   const imageData = new FormData();
 
-  for (let i = 0; i < image.length; i++) imageData.append("image", image[i]);
+  for (let i = 0; i < image.length; i++)
+    imageData.append("image", image[i].img);
 
   console.log("image data " + imageData);
 

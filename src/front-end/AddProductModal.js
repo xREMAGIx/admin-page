@@ -17,6 +17,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import GridListTile from "@material-ui/core/GridListTile";
 import GridList from "@material-ui/core/GridList";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 
 import { useDispatch } from "react-redux";
 import { productActions } from "../_actions";
@@ -46,9 +47,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100px",
   },
   gridList: {
-    "&..MuiGridListTile-root ,& .MuiGridListTile-imgFullWidth": {
-      width: "100%",
-    },
+    height: "60vh",
   },
 }));
 
@@ -56,7 +55,6 @@ export default function TransitionsModal() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
-  const [onImageChange, setOnImageChange] = React.useState("");
   const [image, setImage] = React.useState("");
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
@@ -87,8 +85,11 @@ export default function TransitionsModal() {
 
   const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
-      setOnImageChange(URL.createObjectURL(event.target.files[0]));
-      setImage(event.target.files[0]);
+      let images = [];
+      for (let i = 0; i < event.target.files.length; i++) {
+        images.push({ id: i, img: event.target.files[i] });
+      }
+      setImage(images);
     }
   };
 
@@ -98,6 +99,12 @@ export default function TransitionsModal() {
 
   const handleClose = () => {
     setOpen(false);
+  };
+
+  const onDeleteNew = (e) => {
+    let newImg = image.filter((_image) => _image.id !== e.target.id * 1);
+    //console.log(newImg);
+    setImage(newImg);
   };
 
   const onSubmit = async () => {
@@ -129,7 +136,7 @@ export default function TransitionsModal() {
               <Typography variant="h4" gutterBottom>
                 Add new product
               </Typography>
-              <Grid container direction="row" spacing={1}>
+              <Grid container direction="row" spacing={4}>
                 <Grid container item xs={6} spacing={4}>
                   <Grid item xs={12}>
                     <TextField
@@ -253,7 +260,9 @@ export default function TransitionsModal() {
                       </Button>
                     </Grid>
                     <Grid item>
-                      <Button variant="contained">Cancel</Button>
+                      <Button variant="contained" onClick={handleClose}>
+                        Cancel
+                      </Button>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -288,10 +297,28 @@ export default function TransitionsModal() {
                     </div>
                   </Grid>
                   <Grid item xs={12}>
-                    <GridList className={classes.gri}>
-                      <GridListTile style={{ width: "100%" }}>
-                        <img src={onImageChange} alt="No data" />>
-                      </GridListTile>
+                    <GridList className={classes.gridList}>
+                      {image &&
+                        image.map((item) => (
+                          <GridListTile key={item.id} style={{ width: "100%" }}>
+                            <img
+                              src={URL.createObjectURL(item.img)}
+                              alt={"No data"}
+                            />
+                            <GridListTileBar
+                              title={item.img.name}
+                              actionIcon={
+                                <Button
+                                  id={item.id}
+                                  style={{ color: "red" }}
+                                  onClick={(e) => onDeleteNew(e)}
+                                >
+                                  <Typography id={item.id}>Del</Typography>
+                                </Button>
+                              }
+                            />
+                          </GridListTile>
+                        ))}
                     </GridList>
                   </Grid>
                 </Grid>

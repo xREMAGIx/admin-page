@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme) => ({
     display: "none",
   },
   gridList: {
-    height: "6 0vh",
+    height: "60vh",
   },
 }));
 
@@ -94,9 +94,8 @@ export default function ProductEdit(props) {
     if (event.target.files && event.target.files[0]) {
       let images = [];
       for (let i = 0; i < event.target.files.length; i++) {
-        images.push(event.target.files[i]);
+        images.push({ id: i, img: event.target.files[i] });
       }
-      console.log(images);
       setImage(images);
     }
   };
@@ -110,12 +109,9 @@ export default function ProductEdit(props) {
   };
 
   const onDeleteNew = (e) => {
-    console.log(image);
-    console.log(e.target);
-    // setImage(
-    //   ...image,
-    //   image.filter((_image) => _image.id !== e.target.id)
-    // );
+    let newImg = image.filter((_image) => _image.id !== e.target.id * 1);
+    //console.log(newImg);
+    setImage(newImg);
   };
 
   const onChange = (e) => {
@@ -124,6 +120,7 @@ export default function ProductEdit(props) {
 
   const onSave = () => {
     console.log(formData);
+    console.log(image);
     dispatch(
       productActions.update(props.match.params.id, formData, image, delImage)
     );
@@ -140,7 +137,7 @@ export default function ProductEdit(props) {
               <Typography variant="h4" gutterBottom>
                 Product Edit
               </Typography>
-              <Grid container direction="row" spacing={1}>
+              <Grid container direction="row" spacing={5}>
                 <Grid container item xs={12} md={6} spacing={3}>
                   <Grid item xs={12}>
                     <TextField
@@ -277,7 +274,7 @@ export default function ProductEdit(props) {
                     </div>
                   </Grid>
                   <Grid item>
-                    <GridList cellHeight={180} className={classes.gridList}>
+                    <GridList cellHeight={300} className={classes.gridList}>
                       {formData.images &&
                         formData.images.map((item) => (
                           <GridListTile
@@ -304,23 +301,20 @@ export default function ProductEdit(props) {
                         ))}
                       {image &&
                         image.map((item) => (
-                          <GridListTile
-                            key={item.lastModified}
-                            style={{ width: "100%" }}
-                          >
+                          <GridListTile key={item.id} style={{ width: "100%" }}>
                             <img
-                              src={URL.createObjectURL(item)}
+                              src={URL.createObjectURL(item.img)}
                               alt={"No data"}
                             />
                             <GridListTileBar
-                              title={item.name}
+                              title={item.img.name}
                               actionIcon={
                                 <Button
-                                  id={item._id}
+                                  id={item.id}
                                   style={{ color: "red" }}
                                   onClick={(e) => onDeleteNew(e)}
                                 >
-                                  <Typography id={item._id}>Del</Typography>
+                                  <Typography id={item.id}>Del</Typography>
                                 </Button>
                               }
                             />

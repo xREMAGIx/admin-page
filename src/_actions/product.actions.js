@@ -59,8 +59,6 @@ function add(product, image) {
         dispatch(success(product));
         //history.push("/products");
         window.location.reload();
-
-        //window.location.reload();
         //dispatch(alertActions.success("Add new product successful"));
       },
       (error) => {
