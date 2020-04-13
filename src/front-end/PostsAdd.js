@@ -5,38 +5,40 @@ import Container from "@material-ui/core/Container";
 import CustomDrawer from "./CustomDrawer";
 import TextEditor from "./TextEditor";
 import Button from "@material-ui/core/Button";
+import Grid from "@material-ui/core/Grid";
+import { Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 
 import { postActions } from "../_actions";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBarSpacer: theme.mixins.toolbar,
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   uploadRoot: {
     "& > *": {
-      margin: theme.spacing(1)
-    }
+      margin: theme.spacing(1),
+    },
   },
   input: {
-    display: "none"
+    display: "none",
   },
   postBtn: {
     display: "flex",
     margin: theme.spacing(2),
-    justifyContent: "flex-end"
-  }
+    justifyContent: "flex-end",
+  },
 }));
 
 export default function PostAdd(props) {
@@ -46,7 +48,7 @@ export default function PostAdd(props) {
 
   const [formData, setFormData] = useState({
     title: "",
-    content: ""
+    content: "",
   });
 
   //const posts = useSelector(state => state.posts);
@@ -101,11 +103,11 @@ export default function PostAdd(props) {
               Post Add
             </Typography>
             <TextEditor
-              onTitleChange={e => setTitle(e)}
+              onTitleChange={(e) => setTitle(e)}
               content={postContent}
-              onChange={e => setPostContent(e)}
+              onChange={(e) => setPostContent(e)}
             />
-            <div className={classes.postBtn}>
+            {/* <div className={classes.postBtn}>
               <Button
                 variant="contained"
                 color="primary"
@@ -113,17 +115,31 @@ export default function PostAdd(props) {
               >
                 ConsoleLog
               </Button>
-            </div>
-            <div className={classes.postBtn}>
-              <Button
-                variant="contained"
-                color="primary"
-                component="span"
-                onClick={() => onSave()}
-              >
-                Post
-              </Button>
-            </div>
+            </div> */}
+
+            <Grid
+              container
+              style={{ marginTop: "10px" }}
+              direction="row"
+              justify="flex-end"
+              spacing={5}
+            >
+              <Grid item>
+                <Button component={Link} to="/posts" variant="contained">
+                  Cancel
+                </Button>
+              </Grid>
+              <Grid item>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  component="span"
+                  onClick={() => onSave()}
+                >
+                  Post
+                </Button>
+              </Grid>
+            </Grid>
           </Container>
         </main>
       </div>

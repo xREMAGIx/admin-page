@@ -5,15 +5,15 @@ import { combineReducers } from "redux";
 import { users } from "./users.reducer";
 import { products } from "./products.reducer";
 import { posts } from "./posts.reducer";
-import { alert } from "./alert.reducer";
+import { banner } from "./banner.reducer";
 
 const rootReducer = combineReducers({
   //   authentication,
   //   registration,
+  banner,
   posts,
   products,
   users,
-  alert
 });
 
 export default rootReducer;

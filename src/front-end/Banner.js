@@ -6,50 +6,67 @@ import Button from "@material-ui/core/Button";
 import GridListTile from "@material-ui/core/GridListTile";
 import Typography from "@material-ui/core/Typography";
 
-const useStyles = makeStyles(theme => ({
+import { useDispatch, useSelector } from "react-redux";
+
+import { bannerActions } from "../_actions";
+
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: "flex"
+    display: "flex",
   },
   appBarSpacer: theme.mixins.toolbar,
   container: {
     paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4)
+    paddingBottom: theme.spacing(4),
   },
   content: {
     flexGrow: 1,
     height: "100vh",
-    overflow: "auto"
+    overflow: "auto",
   },
   uploadRoot: {
     "& > *": {
-      margin: theme.spacing(1)
+      margin: theme.spacing(1),
     },
     display: "flex",
-    justifyContent: "center"
+    justifyContent: "center",
   },
   input: {
-    display: "none"
+    display: "none",
   },
   gridTile: {
     "& .MuiGridListTile-tile": {
-      backgroundColor: "#e0e0e0"
-    }
+      backgroundColor: "#e0e0e0",
+      //maxHeight: "30vh",
+    },
+    "& .MuiGridListTile-imgFullWidth": {
+      transform: "translateY(0%) translateX(20%)",
+      width: "auto",
+    },
+    "& .MuiGridListTile-imgFullHeight": {},
   },
   img: {
-    maxHeight: "30vh"
-  }
+    height: "400px",
+  },
 }));
 
 export default function Banner() {
   const classes = useStyles();
+  const dispatch = useDispatch();
 
+  const [image, setImage] = React.useState("");
   const [onImageChange, setOnImageChange] = React.useState("");
 
-  const handleOnImageChange = event => {
+  const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
       setOnImageChange(URL.createObjectURL(event.target.files[0]));
-      //setImage(event.target.files[0]);
+      setImage(event.target.files[0]);
     }
+  };
+
+  const onSave = () => {
+    console.log(image);
+    dispatch(bannerActions.upload(image));
   };
 
   return (
@@ -73,13 +90,23 @@ export default function Banner() {
                   Upload
                 </Button>
               </label>
-              <Button variant="contained" color="primary" component="span">
+              <Button
+                variant="contained"
+                color="primary"
+                component="span"
+                onClick={() => onSave()}
+              >
                 Save
               </Button>
             </div>
             <Typography variant="h6">Current image banner: </Typography>
             <GridListTile className={classes.gridTile} component="image">
-              <img className={classes.img} src={onImageChange} alt="" />>
+              <img
+                src={"http://localhost:5000/uploads/banner.jpg"}
+                className={classes.img}
+                alt=""
+              />
+              >
             </GridListTile>
             <Typography style={{ marginTop: "5vh" }} variant="h6">
               Preview new image banner:

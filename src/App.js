@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import PropTypes from "prop-types";
-import { Provider } from "react-redux";
 import { Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./front-end/Dashboard";
 import Orders from "./front-end/Orders";
@@ -22,7 +21,7 @@ const App = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(userActions.getMe());
-  }, []);
+  }, [dispatch]);
   const user = useSelector((state) => state.users);
   return (
     // <Provider store={store}>
