@@ -5,12 +5,12 @@ import { combineReducers } from "redux";
 import { users } from "./users.reducer";
 import { products } from "./products.reducer";
 import { posts } from "./posts.reducer";
-import { banner } from "./banner.reducer";
+import { banners } from "./banners.reducer";
 
 const rootReducer = combineReducers({
   //   authentication,
   //   registration,
-  banner,
+  banners,
   posts,
   products,
   users,

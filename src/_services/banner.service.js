@@ -2,24 +2,28 @@ import { authHeader } from "../_helpers";
 import axios from "axios";
 
 export const bannerService = {
-  get,
-  upload,
+  getAll,
+  add,
+  delete: _delete,
 };
 
-async function get() {
+async function getAll() {
   const requestConfig = {
     //headers: authHeader()
   };
 
-  //return await axios.get(`/api/banner`, requestConfig).then(handleResponse);
+  return await axios.get(`/api/banner`, requestConfig).then(handleResponse);
 }
 
-async function upload(image) {
+async function add(image) {
   console.log(image);
 
   const imageData = new FormData();
 
-  imageData.append("image", image);
+  for (let i = 0; i < image.length; i++)
+    imageData.append("image", image[i].img);
+
+  console.log(imageData);
 
   if (imageData.get("image")) {
     const configFormData = {
@@ -28,9 +32,22 @@ async function upload(image) {
       },
     };
     return await axios
-      .put("/api/banner", imageData, configFormData)
+      .post("/api/banner", imageData, configFormData)
       .then(handleResponse);
   }
+}
+
+async function _delete(delImage) {
+  const requestConfig = {
+    // headers: authHeader()
+  };
+
+  for (let i = 0; i < delImage.length; i++)
+    try {
+      await axios.delete("/api/banner/" + delImage[i]).then(handleResponse);
+    } catch (error) {
+      console.log(error);
+    }
 }
 
 function handleResponse(response) {

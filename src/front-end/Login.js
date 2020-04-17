@@ -14,7 +14,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useDispatch, useSelector } from "react-redux";
 import { userActions } from "../_actions";
-import axios from "axios";
 
 function Copyright() {
   return (
@@ -29,24 +28,24 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
 }));
 
 export default function SignIn() {
@@ -54,15 +53,15 @@ export default function SignIn() {
 
   const [formData, setFormData] = React.useState({
     email: "",
-    password: ""
+    password: "",
   });
 
-  const users = useSelector(state => state.users);
+  const users = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
   const { email, password } = formData;
 
-  const onChange = e => {
+  const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     console.log(e.target.value);
   };
@@ -120,7 +119,7 @@ export default function SignIn() {
           autoComplete="email"
           autoFocus
           value={email}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
         <TextField
           variant="outlined"
@@ -133,7 +132,7 @@ export default function SignIn() {
           id="password"
           autoComplete="current-password"
           value={password}
-          onChange={e => onChange(e)}
+          onChange={(e) => onChange(e)}
         />
         <FormControlLabel
           control={<Checkbox value="remember" color="primary" />}

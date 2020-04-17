@@ -13,7 +13,7 @@ import Banner from "./front-end/Banner";
 import Posts from "./front-end/Posts";
 import PostsAdd from "./front-end/PostsAdd";
 import PostsEdit from "./front-end/PostsEdit";
-import AdminRoute from "./front-end/routings/AdminRoute";
+import AdminRoute from "./front-end/components/AdminRoute";
 import { useSelector, useDispatch } from "react-redux";
 import { userActions } from "./_actions";
 

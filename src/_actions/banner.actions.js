@@ -3,11 +3,13 @@ import { bannerService } from "../_services";
 import { history } from "../_helpers";
 
 export const bannerActions = {
-  get,
-  upload,
+  //add,
+  getAll,
+  //delete: _delete,
+  add_delete,
 };
 
-function get() {
+function getAll() {
   return (dispatch) => {
     dispatch(request());
 
@@ -18,40 +20,103 @@ function get() {
   };
 
   function request() {
-    return { type: bannerConstants.GET_REQUEST };
+    return { type: bannerConstants.GETALL_REQUEST };
   }
-  function success(banner) {
-    return { type: bannerConstants.GET_SUCCESS, banner };
+  function success(banners) {
+    return { type: bannerConstants.GETALL_SUCCESS, banners };
   }
   function failure(error) {
-    return { type: bannerConstants.GET_FAILURE, error };
+    return { type: bannerConstants.GETALL_FAILURE, error };
   }
 }
 
-function upload(image) {
+// function add(image) {
+//   return async (dispatch) => {
+//     dispatch(request(image));
+//     await bannerService.add(image).then(
+//       (image) => {
+//         dispatch(success(image));
+//         //dispatch(alertActions.success("Add new product successful"));
+//       },
+//       (error) => {
+//         dispatch(failure(error.toString()));
+//         //dispatch(alertActions.error(error.toString()));
+//       }
+//     );
+//   };
+
+//   function request(image) {
+//     return { type: bannerConstants.ADD_REQUEST, image };
+//   }
+//   function success(image) {
+//     return { type: bannerConstants.ADD_SUCCESS, image };
+//   }
+//   function failure(error) {
+//     return { type: bannerConstants.ADD_FAILURE, error };
+//   }
+// }
+
+// // prefixed function name with underscore because delete is a reserved word in javascript
+// function _delete(id) {
+//   return async (dispatch) => {
+//     dispatch(request(id));
+//     await bannerService.delete(id).then(
+//       (id) => {
+//         dispatch(success(id));
+//       },
+//       (error) => dispatch(failure(id, error.toString()))
+//     );
+//   };
+
+//   function request(id) {
+//     return { type: bannerConstants.DELETE_REQUEST, id };
+//   }
+//   function success(id) {
+//     return { type: bannerConstants.DELETE_SUCCESS, id };
+//   }
+//   function failure(id, error) {
+//     return { type: bannerConstants.DELETE_FAILURE, id, error };
+//   }
+// }
+
+function add_delete(image, id) {
   return async (dispatch) => {
-    dispatch(request(image));
-    await bannerService.upload(image).then(
-      (image) => {
-        dispatch(success(image));
-        //history.push("/products");
-        window.location.reload();
-        //dispatch(alertActions.success("Add new product successful"));
+    dispatch(requestAdd(image));
+    await bannerService.add(image).then(
+      async (image) => {
+        dispatch(successAdd(image));
+        dispatch(requestDelete(id));
+        await bannerService.delete(id).then(
+          (id) => {
+            dispatch(successDelete(id));
+            history.go();
+          },
+          (error) => dispatch(failureDelete(id, error.toString()))
+        );
       },
       (error) => {
-        dispatch(failure(error.toString()));
+        dispatch(failureAdd(error.toString()));
         //dispatch(alertActions.error(error.toString()));
       }
     );
   };
 
-  function request(image) {
-    return { type: bannerConstants.UPLOAD_REQUEST, image };
+  function requestAdd(image) {
+    return { type: bannerConstants.ADD_REQUEST, image };
   }
-  function success(image) {
-    return { type: bannerConstants.UPLOAD_SUCCESS, image };
+  function successAdd(image) {
+    return { type: bannerConstants.ADD_SUCCESS, image };
   }
-  function failure(error) {
-    return { type: bannerConstants.UPLOAD_FAILURE, error };
+  function failureAdd(error) {
+    return { type: bannerConstants.ADD_FAILURE, error };
+  }
+  function requestDelete(id) {
+    return { type: bannerConstants.DELETE_REQUEST, id };
+  }
+  function successDelete(id) {
+    return { type: bannerConstants.DELETE_SUCCESS, id };
+  }
+  function failureDelete(id, error) {
+    return { type: bannerConstants.DELETE_FAILURE, id, error };
   }
 }
