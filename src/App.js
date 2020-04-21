@@ -13,6 +13,7 @@ import Banner from "./front-end/Banner";
 import Posts from "./front-end/Posts";
 import PostsAdd from "./front-end/PostsAdd";
 import PostsEdit from "./front-end/PostsEdit";
+import Categories from "./front-end/Categories";
 import AdminRoute from "./front-end/components/AdminRoute";
 import { useSelector, useDispatch } from "react-redux";
 import { userActions } from "./_actions";
@@ -29,7 +30,6 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={Login}></Route>
         <Route exact path="/register" component={Register}></Route>
-        {console.log(user)}
         <AdminRoute
           exact
           path="/dashboard"
@@ -72,6 +72,12 @@ const App = () => {
           component={PostsEdit}
         ></AdminRoute>
         {/* <Route exact path="/text-editor" component={TextEditor}></Route> */}
+        <AdminRoute
+          exact
+          path="/categories"
+          user={user}
+          component={Categories}
+        ></AdminRoute>
         <AdminRoute
           exact
           path="/banner"

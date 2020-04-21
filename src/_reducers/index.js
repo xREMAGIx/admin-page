@@ -6,6 +6,7 @@ import { users } from "./users.reducer";
 import { products } from "./products.reducer";
 import { posts } from "./posts.reducer";
 import { banners } from "./banners.reducer";
+import { categories } from "./categories.reducer";
 
 const rootReducer = combineReducers({
   //   authentication,
@@ -13,6 +14,7 @@ const rootReducer = combineReducers({
   banners,
   posts,
   products,
+  categories,
   users,
 });
 

@@ -1,7 +1,7 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
 
-export const productService = {
+export const categoryService = {
   getAll,
   getById,
   add,
@@ -13,8 +13,8 @@ async function getAll() {
   const requestConfig = {
     //headers: authHeader()
   };
-  console.log(2);
-  return await axios.get(`/api/products`, requestConfig).then(handleResponse);
+
+  return await axios.get(`/api/categories`, requestConfig).then(handleResponse);
 }
 
 async function getById(id) {
@@ -22,15 +22,13 @@ async function getById(id) {
     headers: authHeader(),
   };
   return await axios
-    .get(`/api/products/${id}`, requestConfig)
+    .get(`/api/categories/${id}`, requestConfig)
     .then(handleResponse);
 }
 
-async function add(product, image) {
+async function add(category, image) {
   const imageData = new FormData();
-
-  for (let i = 0; i < image.length; i++)
-    imageData.append("image", image[i].img);
+  imageData.append("image", image);
 
   const requestConfig = {
     headers: {
@@ -39,13 +37,13 @@ async function add(product, image) {
     },
   };
 
-  const body = JSON.stringify(product);
+  const body = JSON.stringify(category);
   console.log(body);
 
   if (imageData.get("image")) {
     let res;
     try {
-      res = await axios.post(`/api/products`, body, requestConfig);
+      res = await axios.post(`/api/categories`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +56,7 @@ async function add(product, image) {
     try {
       return await axios
         .put(
-          "/api/products/" + res.data.data._id + "/image",
+          "/api/categories/" + res.data.data._id + "/image",
           imageData,
           configFormData
         )
@@ -68,18 +66,14 @@ async function add(product, image) {
     }
   } else {
     return await axios
-      .post("/api/products", body, requestConfig)
+      .post("/api/categories", body, requestConfig)
       .then(handleResponse);
   }
 }
 
-async function update(id, product, image, delImage) {
+async function update(id, category, image) {
   const imageData = new FormData();
-
-  for (let i = 0; i < image.length; i++)
-    imageData.append("image", image[i].img);
-
-  console.log("image data " + imageData);
+  imageData.append("image", image);
 
   const requestConfig = {
     headers: {
@@ -88,26 +82,12 @@ async function update(id, product, image, delImage) {
     },
   };
 
-  const body = JSON.stringify(product);
-
-  const requestConfig1 = {
-    // headers: authHeader()
-  };
-
-  for (let i = 0; i < delImage.length; i++)
-    try {
-      await axios.delete(
-        "/api/products/" + id + "/image/" + delImage[i],
-        imageData,
-        requestConfig1
-      );
-    } catch (error) {
-      console.log(error);
-    }
+  const body = JSON.stringify(category);
+  console.log(body);
 
   if (imageData.get("image")) {
     try {
-      await axios.put(`/api/products/${id}`, body, requestConfig);
+      await axios.put(`/api/categories/${id}`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -119,14 +99,14 @@ async function update(id, product, image, delImage) {
     };
     try {
       return await axios
-        .put("/api/products/" + id + "/image", imageData, configFormData)
+        .put("/api/categories/" + id + "/image", imageData, configFormData)
         .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
   } else {
     return await axios
-      .put(`/api/products/${id}`, body, requestConfig)
+      .put(`/api/categories/${id}`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -138,13 +118,12 @@ async function _delete(id) {
   };
 
   return await axios
-    .delete(`/api/products/${id}`, requestConfig)
+    .delete(`/api/categories/${id}`, requestConfig)
     .then(handleResponse);
 }
 
 function handleResponse(response) {
   const data = response.data.data;
-  console.log(data);
   if (response.status !== 200) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
@@ -155,5 +134,6 @@ function handleResponse(response) {
     const error = (data && data.message) || response.statusText;
     return Promise.reject(error);
   }
+
   return data;
 }

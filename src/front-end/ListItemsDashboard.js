@@ -7,7 +7,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
-//import TextFormatIcon from "@material-ui/icons/TextFormat";
+import CategoryIcon from "@material-ui/icons/Category";
 import PanoramaIcon from "@material-ui/icons/Panorama";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
@@ -19,7 +19,7 @@ import DashBoard from "./Dashboard";
 export const mainListItems = (
   <div>
     <Link to="/Dashboard">
-      <ListItem button component="a">
+      <ListItem button>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
@@ -28,15 +28,23 @@ export const mainListItems = (
     </Link>
 
     <Link to="/products">
-      <ListItem button component="a">
+      <ListItem button>
         <ListItemIcon>
           <FastfoodIcon />
         </ListItemIcon>
         <ListItemText primary="Products" />
       </ListItem>
     </Link>
+    <Link to="/categories">
+      <ListItem button>
+        <ListItemIcon>
+          <CategoryIcon />
+        </ListItemIcon>
+        <ListItemText primary="Categories" />
+      </ListItem>
+    </Link>
     <Link to="/orders">
-      <ListItem button component="a">
+      <ListItem button>
         <ListItemIcon>
           <ShoppingCartIcon />
         </ListItemIcon>
@@ -44,7 +52,7 @@ export const mainListItems = (
       </ListItem>
     </Link>
     <Link to="/posts">
-      <ListItem button component="a">
+      <ListItem button>
         <ListItemIcon>
           <AssignmentIcon />
         </ListItemIcon>
