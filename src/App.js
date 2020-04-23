@@ -14,6 +14,7 @@ import Posts from "./front-end/Posts";
 import PostsAdd from "./front-end/PostsAdd";
 import PostsEdit from "./front-end/PostsEdit";
 import Categories from "./front-end/Categories";
+import Brands from "./front-end/Brands";
 import AdminRoute from "./front-end/components/AdminRoute";
 import { useSelector, useDispatch } from "react-redux";
 import { userActions } from "./_actions";
@@ -77,6 +78,12 @@ const App = () => {
           path="/categories"
           user={user}
           component={Categories}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/brands"
+          user={user}
+          component={Brands}
         ></AdminRoute>
         <AdminRoute
           exact

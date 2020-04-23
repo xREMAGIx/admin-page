@@ -84,6 +84,10 @@ export default function CategoryAddModal() {
     dispatch(categoryActions.add(formData));
   };
 
+  const keyPressed = (e) => {
+    if (e.key === "Enter") onSubmit(e);
+  };
+
   return (
     <div>
       <Tooltip title="Add new">
@@ -118,6 +122,7 @@ export default function CategoryAddModal() {
                 name="name"
                 value={name}
                 onChange={(e) => onChange(e)}
+                onKeyPress={(e) => keyPressed(e)}
               />
               <Grid
                 style={{ marginTop: "10px" }}

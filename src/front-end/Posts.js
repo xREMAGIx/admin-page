@@ -26,6 +26,7 @@ import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -352,12 +353,13 @@ export default function Posts() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const loading = false;
+
   const posts = useSelector((state) => state.posts);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log("GET ALL POSTS");
     dispatch(postActions.getAll());
   }, [dispatch]);
 
@@ -422,20 +424,30 @@ export default function Posts() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {console.log(posts.items)}
-          {posts.items && (
-            <Container maxWidth="lg" className={classes.mainContainer}>
+          <Container maxWidth="lg" className={classes.mainContainer}>
+            {!posts.items ? (
+              <Skeleton variant="rect" width={"100%"} height={50} />
+            ) : (
               <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedIndex={selected}
               />
-              <TableContainer className={classes.tableContainer}>
-                <Table
-                  stickyHeader
-                  className={classes.table}
-                  aria-labelledby="tableTitle"
-                  aria-label="enhanced table"
-                >
+            )}
+            <TableContainer className={classes.tableContainer}>
+              <Table
+                stickyHeader
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                aria-label="enhanced table"
+              >
+                {!posts.items ? (
+                  <Skeleton
+                    variant="rect"
+                    width={"100%"}
+                    height={40}
+                    style={{ marginTop: "10px" }}
+                  />
+                ) : (
                   <EnhancedTableHead
                     classes={classes}
                     numSelected={selected.length}
@@ -445,6 +457,15 @@ export default function Posts() {
                     onRequestSort={handleRequestSort}
                     rowCount={posts.items.length}
                   />
+                )}
+                {!posts.items ? (
+                  <Skeleton
+                    variant="rect"
+                    width={"100%"}
+                    height={100}
+                    style={{ marginTop: "10px" }}
+                  />
+                ) : (
                   <TableBody>
                     {stableSort(posts.items, getComparator(order, orderBy))
                       .slice(
@@ -497,8 +518,17 @@ export default function Posts() {
                       </TableRow>
                     )}
                   </TableBody>
-                </Table>
-              </TableContainer>
+                )}
+              </Table>
+            </TableContainer>
+            {!posts.items ? (
+              <Skeleton
+                variant="rect"
+                width={400}
+                height={50}
+                style={{ marginLeft: "auto", marginTop: "10px" }}
+              />
+            ) : (
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
@@ -508,8 +538,8 @@ export default function Posts() {
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
-            </Container>
-          )}
+            )}
+          </Container>
         </main>
       </div>
     </React.Fragment>

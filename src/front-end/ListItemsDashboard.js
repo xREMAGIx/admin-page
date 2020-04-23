@@ -8,14 +8,14 @@ import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
 import BarChartIcon from "@material-ui/icons/BarChart";
 import CategoryIcon from "@material-ui/icons/Category";
+import BrandingWatermarkIcon from "@material-ui/icons/BrandingWatermark";
 import PanoramaIcon from "@material-ui/icons/Panorama";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import FastfoodIcon from "@material-ui/icons/Fastfood";
-import { history } from "../_helpers";
 import { Link } from "react-router-dom";
 
 // component
-import DashBoard from "./Dashboard";
+//import DashBoard from "./Dashboard";
 export const mainListItems = (
   <div>
     <Link to="/Dashboard">
@@ -41,6 +41,14 @@ export const mainListItems = (
           <CategoryIcon />
         </ListItemIcon>
         <ListItemText primary="Categories" />
+      </ListItem>
+    </Link>
+    <Link to="/brands">
+      <ListItem button>
+        <ListItemIcon>
+          <BrandingWatermarkIcon />
+        </ListItemIcon>
+        <ListItemText primary="Brands" />
       </ListItem>
     </Link>
     <Link to="/orders">

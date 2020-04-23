@@ -2,8 +2,9 @@ import React, { useEffect } from "react";
 import { lighten, makeStyles, fade } from "@material-ui/core/styles";
 import CustomDrawer from "./CustomDrawer";
 import { useDispatch, useSelector } from "react-redux";
-import { productActions } from "../_actions";
-import { Link } from "react-router-dom";
+import { brandActions } from "../_actions";
+
+import Skeleton from "@material-ui/lab/Skeleton";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import Table from "@material-ui/core/Table";
@@ -22,11 +23,10 @@ import IconButton from "@material-ui/core/IconButton";
 import Tooltip from "@material-ui/core/Tooltip";
 import Grid from "@material-ui/core/Grid";
 import InputBase from "@material-ui/core/InputBase";
-import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
-
-import AddProductModal from "./AddProductModal";
+import BrandAddModal from "./BrandsAdd";
+import BrandEditModal from "./BrandsEdit";
 
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -56,6 +56,8 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
+  console.log(array);
+  console.log(Array.isArray(array));
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -67,33 +69,16 @@ function stableSort(array, comparator) {
 
 const headCells = [
   {
-    id: "sku",
+    id: "name",
     numeric: false,
     disablePadding: true,
-    label: "SKU",
-  },
-  {
-    id: "productName",
-    numeric: false,
-    disablePadding: true,
-    label: "Product Name",
-  },
-  { id: "category", numeric: false, disablePadding: true, label: "Category" },
-  { id: "img", numeric: false, disablePadding: false, label: "Image" },
-  { id: "price", numeric: true, disablePadding: false, label: "Price" },
-  { id: "size", numeric: true, disablePadding: false, label: "Size" },
-  { id: "discount", numeric: true, disablePadding: false, label: "Discount" },
-  {
-    id: "description",
-    numeric: false,
-    disablePadding: true,
-    label: "Description",
+    label: "Brand name",
   },
   {
     id: "createAt",
     numeric: false,
     disablePadding: true,
-    label: "Create Date",
+    label: "Create At",
   },
 ];
 
@@ -224,7 +209,7 @@ const EnhancedTableToolbar = (props) => {
   const dispatch = useDispatch();
 
   const onDelete = (id) => {
-    dispatch(productActions.delete(id));
+    dispatch(brandActions.delete(id));
   };
 
   return (
@@ -244,31 +229,15 @@ const EnhancedTableToolbar = (props) => {
           </Typography>
         ) : (
           <Typography className={classes.title} variant="h6" id="tableTitle">
-            Products
+            Brands
           </Typography>
         )}
 
         {numSelected > 0 ? (
           <Grid container direction="row" justify="flex-end" spacing={1}>
-            {/* <Grid item>
-              <Tooltip title="Add new">
-                <IconButton aria-label="add-new">
-                  <AddCircleIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid> */}
             {numSelected < 2 ? (
               <Grid item>
-                <Tooltip title="Modify">
-                  <Link to={"/products-edit/" + selectedIndex[0]}>
-                    <IconButton
-                      href={"/products-edit/" + selectedIndex[0]}
-                      aria-label="modify"
-                    >
-                      <CreateIcon />
-                    </IconButton>
-                  </Link>
-                </Tooltip>
+                <BrandEditModal id={selectedIndex[0]} />
               </Grid>
             ) : null}
             <Grid item>
@@ -305,7 +274,7 @@ const EnhancedTableToolbar = (props) => {
               </div>
             </Grid>
             <Grid item>
-              <AddProductModal />
+              <BrandAddModal />
             </Grid>
           </Grid>
         )}
@@ -336,6 +305,7 @@ const useStyles = makeStyles((theme) => ({
     minWidth: 750,
   },
   tableContainer: {
+    marginTop: "10px",
     maxHeight: "60vh",
   },
   visuallyHidden: {
@@ -355,7 +325,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Products() {
+export default function Brands() {
   const classes = useStyles();
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("");
@@ -363,14 +333,18 @@ export default function Products() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const brands = useSelector((state) => state.brands);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(productActions.getAll());
+    dispatch(brandActions.getAll());
   }, [dispatch]);
 
-  const products = useSelector((state) => state.products);
+  // useEffect(() => {
+  //   console.log(JSON.parse(posts.items[0].content));
+  // }, [posts.items]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -379,7 +353,7 @@ export default function Products() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = products.items.map((n) => n._id);
+      const newSelecteds = brands.items.map((n) => n._id);
       setSelected(newSelecteds);
       return;
     }
@@ -428,19 +402,26 @@ export default function Products() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {products.items && (
-            <Container maxWidth="lg" className={classes.mainContainer}>
+          {/* {console.log(posts.items)} */}
+          <Container maxWidth="lg" className={classes.mainContainer}>
+            {!brands.items ? (
+              <Skeleton variant="rect" width={"100%"} height={50} />
+            ) : (
               <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedIndex={selected}
               />
-              <TableContainer className={classes.tableContainer}>
-                <Table
-                  stickyHeader
-                  className={classes.table}
-                  aria-labelledby="tableTitle"
-                  aria-label="enhanced table"
-                >
+            )}
+            <TableContainer className={classes.tableContainer}>
+              <Table
+                stickyHeader
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                aria-label="enhanced table"
+              >
+                {!brands.items ? (
+                  <Skeleton variant="rect" width={"100%"} height={40} />
+                ) : (
                   <EnhancedTableHead
                     classes={classes}
                     numSelected={selected.length}
@@ -448,91 +429,81 @@ export default function Products() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={products.items.length}
+                    rowCount={brands.items.length}
                   />
+                )}
+                {!brands.items ? (
+                  <Skeleton variant="rect" width={"100%"} height={100} />
+                ) : (
                   <TableBody>
-                    {stableSort(products.items, getComparator(order, orderBy))
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                    {Array.isArray(brands.items) &&
+                      stableSort(brands.items, getComparator(order, orderBy))
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row._id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row._id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.sku}
-                            selected={isItemSelected}
-                          >
-                            <TableCell>
-                              <Checkbox
-                                checked={isItemSelected}
-                                inputProps={{ "aria-labelledby": labelId }}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row._id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row._id}
+                              selected={isItemSelected}
                             >
-                              {row.sku}
-                            </TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.productName}
-                            </TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.category}
-                            </TableCell>
-                            <TableCell padding="none">
-                              {row.images.length > 0 ? (
-                                <img
-                                  className={classes.img}
-                                  src={
-                                    "http://localhost:5000/uploads/" +
-                                    row.images[0].path
-                                  }
-                                  alt="broken"
+                              <TableCell>
+                                <Checkbox
+                                  checked={isItemSelected}
+                                  inputProps={{ "aria-labelledby": labelId }}
                                 />
-                              ) : null}
-                            </TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="right">{row.size}</TableCell>
-                            <TableCell align="right">{row.discount}%</TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.description}
-                            </TableCell>
-                            <TableCell padding="none">
-                              {dateFormat(row.createAt)}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
+                              >
+                                {row.name}
+                              </TableCell>
+                              <TableCell scope="row" padding="none">
+                                {dateFormat(row.createdAt)}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>
                         <TableCell colSpan={6} />
                       </TableRow>
                     )}
                   </TableBody>
-                </Table>
-              </TableContainer>
+                )}
+              </Table>
+            </TableContainer>
+            {!brands.items ? (
+              <Skeleton
+                variant="rect"
+                width={400}
+                height={50}
+                style={{ marginLeft: "auto", marginTop: "10px" }}
+              />
+            ) : (
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={products.items.length}
+                count={brands.items.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
-            </Container>
-          )}
+            )}
+          </Container>
         </main>
       </div>
     </React.Fragment>

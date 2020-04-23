@@ -13,7 +13,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 import { useDispatch, useSelector } from "react-redux";
-import { categoryActions } from "../_actions";
+import { brandActions } from "../_actions";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -44,12 +44,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CategoryEditModal(props) {
+export default function BrandEditModal(props) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories);
+  const brands = useSelector((state) => state.brands);
 
   const [formData, setFormData] = useState({
     name: "a",
@@ -72,7 +72,7 @@ export default function CategoryEditModal(props) {
   //   };
 
   const handleOpen = async () => {
-    await dispatch(categoryActions.getById(props.id));
+    await dispatch(brandActions.getById(props.id));
     setOpen(true);
   };
 
@@ -81,7 +81,7 @@ export default function CategoryEditModal(props) {
   };
 
   const onSubmit = async () => {
-    dispatch(categoryActions.update(props.id, formData));
+    dispatch(brandActions.update(props.id, formData));
   };
 
   const keyPressed = (e) => {
@@ -89,9 +89,14 @@ export default function CategoryEditModal(props) {
   };
 
   useEffect(() => {
-    setFormData({ ...categories.item });
+    setFormData({ ...brands.item });
     //setOnImageChange({ ...formData.image });
-  }, [categories.item]);
+  }, [brands.item]);
+
+  useEffect(() => {
+    console.log(formData);
+    //setOnImageChange({ ...formData.image });
+  }, [formData]);
 
   return (
     <div>
@@ -117,12 +122,12 @@ export default function CategoryEditModal(props) {
             {formData && (
               <Container maxWidth="md" className={classes.container}>
                 <Typography variant="h4" gutterBottom>
-                  Category edit
+                  Brand edit
                 </Typography>
                 <TextField
                   fullWidth
                   style={{ marginTop: "10px" }}
-                  label="Category name"
+                  label="Brand name"
                   id="outlined-name"
                   variant="outlined"
                   name="name"

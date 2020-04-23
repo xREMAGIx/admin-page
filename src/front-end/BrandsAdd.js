@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
-import CreateIcon from "@material-ui/icons/Create";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
-import { useDispatch, useSelector } from "react-redux";
-import { categoryActions } from "../_actions";
+import { useDispatch } from "react-redux";
+import { brandActions } from "../_actions";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -44,15 +44,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CategoryEditModal(props) {
+export default function BrandAddModal() {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
 
+  //   const [image, setImage] = React.useState("");
+  //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
-  const categories = useSelector((state) => state.categories);
 
   const [formData, setFormData] = useState({
-    name: "a",
+    name: "",
   });
 
   const { name } = formData;
@@ -71,8 +72,7 @@ export default function CategoryEditModal(props) {
   //     }
   //   };
 
-  const handleOpen = async () => {
-    await dispatch(categoryActions.getById(props.id));
+  const handleOpen = () => {
     setOpen(true);
   };
 
@@ -81,23 +81,18 @@ export default function CategoryEditModal(props) {
   };
 
   const onSubmit = async () => {
-    dispatch(categoryActions.update(props.id, formData));
+    dispatch(brandActions.add(formData));
   };
 
   const keyPressed = (e) => {
     if (e.key === "Enter") onSubmit(e);
   };
 
-  useEffect(() => {
-    setFormData({ ...categories.item });
-    //setOnImageChange({ ...formData.image });
-  }, [categories.item]);
-
   return (
     <div>
-      <Tooltip title="Modify">
-        <IconButton aria-label="modify" onClick={handleOpen}>
-          <CreateIcon />
+      <Tooltip title="Add new">
+        <IconButton aria-label="add-new" onClick={handleOpen}>
+          <AddCircleIcon />
         </IconButton>
       </Tooltip>
       <Modal
@@ -114,45 +109,43 @@ export default function CategoryEditModal(props) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            {formData && (
-              <Container maxWidth="md" className={classes.container}>
-                <Typography variant="h4" gutterBottom>
-                  Category edit
-                </Typography>
-                <TextField
-                  fullWidth
-                  style={{ marginTop: "10px" }}
-                  label="Category name"
-                  id="outlined-name"
-                  variant="outlined"
-                  name="name"
-                  value={name}
-                  onChange={(e) => onChange(e)}
-                  onKeyPress={(e) => keyPressed(e)}
-                />
-                <Grid
-                  style={{ marginTop: "10px" }}
-                  container
-                  justify="center"
-                  spacing={5}
-                >
-                  <Grid item>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      onClick={(e) => onSubmit(e)}
-                    >
-                      Update
-                    </Button>
-                  </Grid>
-                  <Grid item>
-                    <Button variant="contained" onClick={handleClose}>
-                      Cancel
-                    </Button>
-                  </Grid>
+            <Container maxWidth="md" className={classes.container}>
+              <Typography variant="h4" gutterBottom>
+                Add new Brand
+              </Typography>
+              <TextField
+                fullWidth
+                style={{ marginTop: "10px" }}
+                label="Brand name"
+                id="outlined-name"
+                variant="outlined"
+                name="name"
+                value={name}
+                onChange={(e) => onChange(e)}
+                onKeyPress={(e) => keyPressed(e)}
+              />
+              <Grid
+                style={{ marginTop: "10px" }}
+                container
+                justify="center"
+                spacing={5}
+              >
+                <Grid item>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={(e) => onSubmit(e)}
+                  >
+                    Add
+                  </Button>
                 </Grid>
-              </Container>
-            )}
+                <Grid item>
+                  <Button variant="contained" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                </Grid>
+              </Grid>
+            </Container>
           </div>
         </Fade>
       </Modal>

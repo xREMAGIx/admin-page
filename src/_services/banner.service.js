@@ -1,4 +1,4 @@
-import { authHeader } from "../_helpers";
+//import { authHeader } from "../_helpers";
 import axios from "axios";
 
 export const bannerService = {
@@ -38,10 +38,6 @@ async function add(image) {
 }
 
 async function _delete(delImage) {
-  const requestConfig = {
-    // headers: authHeader()
-  };
-
   for (let i = 0; i < delImage.length; i++)
     try {
       await axios.delete("/api/banner/" + delImage[i]).then(handleResponse);
