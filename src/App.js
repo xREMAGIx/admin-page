@@ -5,6 +5,7 @@ import { Router, Route, Switch } from "react-router-dom";
 import Dashboard from "./front-end/Dashboard";
 import Orders from "./front-end/Orders";
 import Products from "./front-end/Products";
+import ProductsAdd from "./front-end/ProductsAdd";
 import ProductsEdit from "./front-end/ProductsEdit";
 import Login from "./front-end/Login";
 import Register from "./front-end/Register";
@@ -42,6 +43,11 @@ const App = () => {
           path="/products"
           user={user}
           component={Products}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/products-add"
+          component={ProductsAdd}
         ></AdminRoute>
         <AdminRoute
           exact

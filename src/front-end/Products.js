@@ -25,8 +25,8 @@ import InputBase from "@material-ui/core/InputBase";
 import CreateIcon from "@material-ui/icons/Create";
 import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
-
-import AddProductModal from "./AddProductModal";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -79,6 +79,7 @@ const headCells = [
     label: "Product Name",
   },
   { id: "category", numeric: false, disablePadding: true, label: "Category" },
+  { id: "brand", numeric: false, disablePadding: true, label: "Brand" },
   { id: "img", numeric: false, disablePadding: false, label: "Image" },
   { id: "price", numeric: true, disablePadding: false, label: "Price" },
   { id: "size", numeric: true, disablePadding: false, label: "Size" },
@@ -126,6 +127,10 @@ function EnhancedTableHead(props) {
           <TableCell
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
+            style={{
+              whiteSpace: "normal",
+              wordWrap: "break-word",
+            }}
             padding={headCell.disablePadding ? "none" : "default"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -250,24 +255,16 @@ const EnhancedTableToolbar = (props) => {
 
         {numSelected > 0 ? (
           <Grid container direction="row" justify="flex-end" spacing={1}>
-            {/* <Grid item>
-              <Tooltip title="Add new">
-                <IconButton aria-label="add-new">
-                  <AddCircleIcon />
-                </IconButton>
-              </Tooltip>
-            </Grid> */}
             {numSelected < 2 ? (
               <Grid item>
                 <Tooltip title="Modify">
-                  <Link to={"/products-edit/" + selectedIndex[0]}>
-                    <IconButton
-                      href={"/products-edit/" + selectedIndex[0]}
-                      aria-label="modify"
-                    >
-                      <CreateIcon />
-                    </IconButton>
-                  </Link>
+                  <IconButton
+                    component={Link}
+                    to={"/products-edit/" + selectedIndex[0]}
+                    aria-label="modify"
+                  >
+                    <CreateIcon />
+                  </IconButton>
                 </Tooltip>
               </Grid>
             ) : null}
@@ -301,11 +298,16 @@ const EnhancedTableToolbar = (props) => {
                     input: classes.inputInput,
                   }}
                   inputProps={{ "aria-label": "search" }}
+                  onChange={props.searchAction}
                 />
               </div>
             </Grid>
             <Grid item>
-              <AddProductModal />
+              <Tooltip title="Add new">
+                <IconButton component={Link} to="/products-add">
+                  <AddCircleIcon />
+                </IconButton>
+              </Tooltip>
             </Grid>
           </Grid>
         )}
@@ -363,14 +365,33 @@ export default function Products() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const [searchResults, setSearchResults] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   //const user = useSelector(state => state.authentication.user);
+
+  const products = useSelector((state) => state.products);
+  const categories = useSelector((state) => state.categories);
+  const brands = useSelector((state) => state.brands);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(productActions.getAll());
   }, [dispatch]);
 
-  const products = useSelector((state) => state.products);
+  useEffect(() => {
+    if (products.items) {
+      const results = products.items.filter((product) =>
+        product.productName.toLowerCase().includes(searchTerm)
+      );
+      setSearchResults(results);
+    }
+  }, [searchTerm, products.items]);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -428,19 +449,32 @@ export default function Products() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {products.items && (
-            <Container maxWidth="lg" className={classes.mainContainer}>
+
+          <Container maxWidth="lg" className={classes.mainContainer}>
+            {!products.items ? (
+              <Skeleton
+                variant="rect"
+                width={"100%"}
+                height={50}
+                style={{ marginBottom: "10px" }}
+              />
+            ) : (
               <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedIndex={selected}
+                searchAction={handleChange}
               />
-              <TableContainer className={classes.tableContainer}>
-                <Table
-                  stickyHeader
-                  className={classes.table}
-                  aria-labelledby="tableTitle"
-                  aria-label="enhanced table"
-                >
+            )}
+            <TableContainer className={classes.tableContainer}>
+              <Table
+                stickyHeader
+                className={classes.table}
+                aria-labelledby="tableTitle"
+                aria-label="enhanced table"
+              >
+                {!products.items ? (
+                  <Skeleton variant="rect" width={"100%"} height={40} />
+                ) : (
                   <EnhancedTableHead
                     classes={classes}
                     numSelected={selected.length}
@@ -450,78 +484,127 @@ export default function Products() {
                     onRequestSort={handleRequestSort}
                     rowCount={products.items.length}
                   />
+                )}
+                {!products.items ? (
+                  <Skeleton variant="rect" width={"100%"} height={100} />
+                ) : (
                   <TableBody>
-                    {stableSort(products.items, getComparator(order, orderBy))
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row, index) => {
-                        const isItemSelected = isSelected(row._id);
-                        const labelId = `enhanced-table-checkbox-${index}`;
+                    {Array.isArray(products.items) &&
+                      stableSort(searchResults, getComparator(order, orderBy))
+                        .slice(
+                          page * rowsPerPage,
+                          page * rowsPerPage + rowsPerPage
+                        )
+                        .map((row, index) => {
+                          const isItemSelected = isSelected(row._id);
+                          const labelId = `enhanced-table-checkbox-${index}`;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={(event) => handleClick(event, row._id)}
-                            role="checkbox"
-                            aria-checked={isItemSelected}
-                            tabIndex={-1}
-                            key={row.sku}
-                            selected={isItemSelected}
-                          >
-                            <TableCell>
-                              <Checkbox
-                                checked={isItemSelected}
-                                inputProps={{ "aria-labelledby": labelId }}
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              id={labelId}
-                              scope="row"
-                              padding="none"
+                          return (
+                            <TableRow
+                              hover
+                              onClick={(event) => handleClick(event, row._id)}
+                              role="checkbox"
+                              aria-checked={isItemSelected}
+                              tabIndex={-1}
+                              key={row.sku}
+                              selected={isItemSelected}
                             >
-                              {row.sku}
-                            </TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.productName}
-                            </TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.category}
-                            </TableCell>
-                            <TableCell padding="none">
-                              {row.images.length > 0 ? (
-                                <img
-                                  className={classes.img}
-                                  src={
-                                    "http://localhost:5000/uploads/" +
-                                    row.images[0].path
-                                  }
-                                  alt="broken"
+                              <TableCell>
+                                <Checkbox
+                                  checked={isItemSelected}
+                                  inputProps={{ "aria-labelledby": labelId }}
                                 />
-                              ) : null}
-                            </TableCell>
-                            <TableCell align="right">{row.price}</TableCell>
-                            <TableCell align="right">{row.size}</TableCell>
-                            <TableCell align="right">{row.discount}%</TableCell>
-                            <TableCell scope="row" padding="none">
-                              {row.description}
-                            </TableCell>
-                            <TableCell padding="none">
-                              {dateFormat(row.createAt)}
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
+                              </TableCell>
+                              <TableCell
+                                component="th"
+                                id={labelId}
+                                scope="row"
+                                padding="none"
+                              >
+                                <Grid item xs zeroMinWidth>
+                                  <Typography variant="body2" noWrap>
+                                    {row.sku}
+                                  </Typography>
+                                </Grid>
+                              </TableCell>
+                              <TableCell scope="row" padding="none">
+                                <Grid item xs zeroMinWidth>
+                                  <Typography variant="body2" noWrap>
+                                    {row.productName}
+                                  </Typography>
+                                </Grid>
+                              </TableCell>
+                              <TableCell scope="row" padding="none">
+                                {categories.items.length !== 0
+                                  ? categories.items.filter((category) => {
+                                      return category._id === row.category;
+                                    })[0].name
+                                  : null}
+                              </TableCell>
+                              <TableCell scope="row" padding="none">
+                                {brands.items.length !== 0
+                                  ? brands.items.filter((brand) => {
+                                      return brand._id === row.brand;
+                                    })[0].name
+                                  : null}
+                              </TableCell>
+                              <TableCell padding="none">
+                                {row.images.length > 0 ? (
+                                  <img
+                                    className={classes.img}
+                                    src={
+                                      "http://localhost:5000/uploads/" +
+                                      row.images[0].path
+                                    }
+                                    alt="broken"
+                                  />
+                                ) : null}
+                              </TableCell>
+                              <TableCell align="right">
+                                {row.price.toLocaleString()}
+                              </TableCell>
+                              <TableCell align="right">{row.size}</TableCell>
+                              <TableCell align="right">
+                                {row.discount}%
+                              </TableCell>
+                              <TableCell
+                                style={{
+                                  maxWidth: "5vw",
+                                  whiteSpace: "normal",
+                                  wordWrap: "break-word",
+                                }}
+                                scope="row"
+                                // padding="none"
+                              >
+                                <Grid item xs zeroMinWidth>
+                                  <Typography variant="body2" noWrap>
+                                    {row.description}
+                                  </Typography>
+                                </Grid>
+                              </TableCell>
+                              <TableCell padding="none">
+                                {dateFormat(row.createAt)}
+                              </TableCell>
+                            </TableRow>
+                          );
+                        })}
                     {emptyRows > 0 && (
                       <TableRow style={{ height: 53 * emptyRows }}>
                         <TableCell colSpan={6} />
                       </TableRow>
                     )}
                   </TableBody>
-                </Table>
-              </TableContainer>
+                )}
+              </Table>
+            </TableContainer>
+            {!products.items ? (
+              <Skeleton
+                variant="rect"
+                width={400}
+                height={50}
+                style={{ marginLeft: "auto", marginTop: "10px" }}
+              />
+            ) : (
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
@@ -531,8 +614,8 @@ export default function Products() {
                 onChangePage={handleChangePage}
                 onChangeRowsPerPage={handleChangeRowsPerPage}
               />
-            </Container>
-          )}
+            )}
+          </Container>
         </main>
       </div>
     </React.Fragment>

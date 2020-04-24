@@ -18,55 +18,47 @@ import { Link } from "react-router-dom";
 //import DashBoard from "./Dashboard";
 export const mainListItems = (
   <div>
-    <Link to="/Dashboard">
-      <ListItem button>
-        <ListItemIcon>
-          <DashboardIcon />
-        </ListItemIcon>
-        <ListItemText primary="Dashboard" />
-      </ListItem>
-    </Link>
+    <ListItem button component={Link} to="/dashboard">
+      <ListItemIcon>
+        <DashboardIcon />
+      </ListItemIcon>
+      <ListItemText primary="Dashboard" />
+    </ListItem>
 
-    <Link to="/products">
-      <ListItem button>
-        <ListItemIcon>
-          <FastfoodIcon />
-        </ListItemIcon>
-        <ListItemText primary="Products" />
-      </ListItem>
-    </Link>
-    <Link to="/categories">
-      <ListItem button>
-        <ListItemIcon>
-          <CategoryIcon />
-        </ListItemIcon>
-        <ListItemText primary="Categories" />
-      </ListItem>
-    </Link>
-    <Link to="/brands">
-      <ListItem button>
-        <ListItemIcon>
-          <BrandingWatermarkIcon />
-        </ListItemIcon>
-        <ListItemText primary="Brands" />
-      </ListItem>
-    </Link>
-    <Link to="/orders">
-      <ListItem button>
-        <ListItemIcon>
-          <ShoppingCartIcon />
-        </ListItemIcon>
-        <ListItemText primary="Orders" />
-      </ListItem>
-    </Link>
-    <Link to="/posts">
-      <ListItem button>
-        <ListItemIcon>
-          <AssignmentIcon />
-        </ListItemIcon>
-        <ListItemText primary="Posts" />
-      </ListItem>
-    </Link>
+    <ListItem button component={Link} to="/products">
+      <ListItemIcon>
+        <FastfoodIcon />
+      </ListItemIcon>
+      <ListItemText primary="Products" />
+    </ListItem>
+
+    <ListItem button component={Link} to="/categories">
+      <ListItemIcon>
+        <CategoryIcon />
+      </ListItemIcon>
+      <ListItemText primary="Categories" />
+    </ListItem>
+
+    <ListItem button component={Link} to="/brands">
+      <ListItemIcon>
+        <BrandingWatermarkIcon />
+      </ListItemIcon>
+      <ListItemText primary="Brands" />
+    </ListItem>
+
+    <ListItem button component={Link} to="/orders">
+      <ListItemIcon>
+        <ShoppingCartIcon />
+      </ListItemIcon>
+      <ListItemText primary="Orders" />
+    </ListItem>
+
+    <ListItem button component={Link} to="/posts">
+      <ListItemIcon>
+        <AssignmentIcon />
+      </ListItemIcon>
+      <ListItemText primary="Posts" />
+    </ListItem>
 
     <ListItem button>
       <ListItemIcon>

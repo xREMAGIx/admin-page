@@ -270,15 +270,11 @@ const EnhancedTableToolbar = (props) => {
                     input: classes.inputInput,
                   }}
                   inputProps={{ "aria-label": "search" }}
+                  onChange={props.searchAction}
                 />
               </div>
             </Grid>
             <Grid item>
-              {/* <Tooltip title="Add new">
-                <IconButton href="/categories-add">
-                  <AddCircleIcon />
-                </IconButton>
-              </Tooltip> */}
               <CategoryAddModal />
             </Grid>
           </Grid>
@@ -338,6 +334,9 @@ export default function Categories() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const [searchResults, setSearchResults] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const categories = useSelector((state) => state.categories);
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
@@ -345,6 +344,19 @@ export default function Categories() {
   useEffect(() => {
     dispatch(categoryActions.getAll());
   }, [dispatch]);
+
+  useEffect(() => {
+    if (categories.items) {
+      const results = categories.items.filter((category) =>
+        category.name.toLowerCase().includes(searchTerm)
+      );
+      setSearchResults(results);
+    }
+  }, [searchTerm, categories.items]);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   // useEffect(() => {
   //   console.log(JSON.parse(posts.items[0].content));
@@ -415,6 +427,7 @@ export default function Categories() {
               <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedIndex={selected}
+                searchAction={handleChange}
               />
             )}
             <TableContainer className={classes.tableContainer}>
@@ -442,10 +455,7 @@ export default function Categories() {
                 ) : (
                   <TableBody>
                     {Array.isArray(categories.items) &&
-                      stableSort(
-                        categories.items,
-                        getComparator(order, orderBy)
-                      )
+                      stableSort(searchResults, getComparator(order, orderBy))
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage

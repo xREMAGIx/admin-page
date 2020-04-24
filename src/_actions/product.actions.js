@@ -1,5 +1,9 @@
 import { productConstants } from "../_constants";
+import { categoryConstants } from "../_constants";
+import { brandConstants } from "../_constants";
 import { productService } from "../_services";
+import { categoryService } from "../_services";
+import { brandService } from "../_services";
 import { history } from "../_helpers";
 
 export const productActions = {
@@ -15,7 +19,27 @@ function getAll() {
     dispatch(request());
 
     productService.getAll().then(
-      (products) => dispatch(success(products)),
+      (products) => {
+        dispatch(success(products));
+
+        //category getAll
+        dispatch(requestCategory());
+        categoryService.getAll().then(
+          (categories) => {
+            dispatch(successCategory(categories));
+
+            //brand getAll
+            dispatch(requestBrand());
+            brandService.getAll().then(
+              (brands) => {
+                dispatch(successBrand(brands));
+              },
+              (error) => dispatch(failureBrand(error.toString()))
+            );
+          },
+          (error) => dispatch(failureCategory(error.toString()))
+        );
+      },
       (error) => dispatch(failure(error.toString()))
     );
   };
@@ -29,14 +53,51 @@ function getAll() {
   function failure(error) {
     return { type: productConstants.GETALL_FAILURE, error };
   }
+  function requestCategory() {
+    return { type: categoryConstants.GETALL_REQUEST };
+  }
+  function successCategory(categories) {
+    return { type: categoryConstants.GETALL_SUCCESS, categories };
+  }
+  function failureCategory(error) {
+    return { type: categoryConstants.GETALL_FAILURE, error };
+  }
+  function requestBrand() {
+    return { type: brandConstants.GETALL_REQUEST };
+  }
+  function successBrand(brands) {
+    return { type: brandConstants.GETALL_SUCCESS, brands };
+  }
+  function failureBrand(error) {
+    return { type: brandConstants.GETALL_FAILURE, error };
+  }
 }
 
 function getById(id) {
   return (dispatch) => {
-    dispatch(request(id));
-    productService.getById(id).then(
-      (products) => dispatch(success(products)),
-      (error) => dispatch(failure(error.toString()))
+    //category getAll
+    dispatch(requestCategory());
+    categoryService.getAll().then(
+      (categories) => {
+        dispatch(successCategory(categories));
+
+        //brand getAll
+        dispatch(requestBrand());
+        brandService.getAll().then(
+          (brands) => {
+            dispatch(successBrand(brands));
+            dispatch(request(id));
+            productService.getById(id).then(
+              (products) => {
+                dispatch(success(products));
+              },
+              (error) => dispatch(failure(error.toString()))
+            );
+          },
+          (error) => dispatch(failureBrand(error.toString()))
+        );
+      },
+      (error) => dispatch(failureCategory(error.toString()))
     );
   };
 
@@ -49,6 +110,24 @@ function getById(id) {
   function failure(error) {
     return { type: productConstants.GETBYID_FAILURE, error };
   }
+  function requestCategory() {
+    return { type: categoryConstants.GETALL_REQUEST };
+  }
+  function successCategory(categories) {
+    return { type: categoryConstants.GETALL_SUCCESS, categories };
+  }
+  function failureCategory(error) {
+    return { type: categoryConstants.GETALL_FAILURE, error };
+  }
+  function requestBrand() {
+    return { type: brandConstants.GETALL_REQUEST };
+  }
+  function successBrand(brands) {
+    return { type: brandConstants.GETALL_SUCCESS, brands };
+  }
+  function failureBrand(error) {
+    return { type: brandConstants.GETALL_FAILURE, error };
+  }
 }
 
 function add(product, image) {
@@ -57,8 +136,8 @@ function add(product, image) {
     await productService.add(product, image).then(
       (product) => {
         dispatch(success(product));
-        //history.push("/products");
-        window.location.reload();
+        history.push("/products");
+        //window.location.reload();
         //dispatch(alertActions.success("Add new product successful"));
       },
       (error) => {

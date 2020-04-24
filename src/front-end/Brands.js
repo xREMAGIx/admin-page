@@ -205,7 +205,7 @@ const useToolbarStyles = makeStyles((theme) => ({
 const EnhancedTableToolbar = (props) => {
   const classes = useToolbarStyles();
   const { numSelected, selectedIndex } = props;
-  //const user = useSelector(state => state.authentication.user);
+
   const dispatch = useDispatch();
 
   const onDelete = (id) => {
@@ -270,6 +270,7 @@ const EnhancedTableToolbar = (props) => {
                     input: classes.inputInput,
                   }}
                   inputProps={{ "aria-label": "search" }}
+                  onChange={props.searchAction}
                 />
               </div>
             </Grid>
@@ -333,17 +334,28 @@ export default function Brands() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
 
+  const [searchResults, setSearchResults] = React.useState([]);
+  const [searchTerm, setSearchTerm] = React.useState("");
+
   const brands = useSelector((state) => state.brands);
-  //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(brandActions.getAll());
   }, [dispatch]);
 
-  // useEffect(() => {
-  //   console.log(JSON.parse(posts.items[0].content));
-  // }, [posts.items]);
+  useEffect(() => {
+    if (brands.items) {
+      const results = brands.items.filter((brand) =>
+        brand.name.toLowerCase().includes(searchTerm)
+      );
+      setSearchResults(results);
+    }
+  }, [searchTerm, brands.items]);
+
+  const handleChange = (event) => {
+    setSearchTerm(event.target.value);
+  };
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -410,6 +422,7 @@ export default function Brands() {
               <EnhancedTableToolbar
                 numSelected={selected.length}
                 selectedIndex={selected}
+                searchAction={handleChange}
               />
             )}
             <TableContainer className={classes.tableContainer}>
@@ -437,7 +450,7 @@ export default function Brands() {
                 ) : (
                   <TableBody>
                     {Array.isArray(brands.items) &&
-                      stableSort(brands.items, getComparator(order, orderBy))
+                      stableSort(searchResults, getComparator(order, orderBy))
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
