@@ -11,8 +11,14 @@ import Box from "@material-ui/core/Box";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
+import Alert from "@material-ui/lab/Alert";
+import AlertTitle from "@material-ui/lab/AlertTitle";
 import Container from "@material-ui/core/Container";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import Collapse from "@material-ui/core/Collapse";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import { userActions } from "../_actions";
 
 function Copyright() {
   return (
@@ -27,24 +33,28 @@ function Copyright() {
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   paper: {
     marginTop: theme.spacing(8),
     display: "flex",
     flexDirection: "column",
-    alignItems: "center"
+    alignItems: "center",
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette.secondary.main,
   },
   form: {
     width: "100%", // Fix IE 11 issue.
-    marginTop: theme.spacing(3)
+    marginTop: theme.spacing(3),
   },
   submit: {
-    margin: theme.spacing(3, 0, 2)
-  }
+    margin: theme.spacing(3, 0, 2),
+  },
+  alertContainer: {
+    margin: theme.spacing(2),
+    width: "100%",
+  },
 }));
 
 export default function SignUp() {
@@ -52,30 +62,42 @@ export default function SignUp() {
   const [formData, setFormData] = React.useState({
     name: "",
     email: "",
-    password: ""
+    password: "",
+    confirmPassword: "",
   });
 
-  const { name, email, password } = formData;
+  const [open, setOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
 
-  const onChange = e => {
+  const { name, email, password, confirmPassword } = formData;
+
+  const users = useSelector((state) => state.users);
+  const dispatch = useDispatch();
+
+  const onChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    console.log(e.target.value);
   };
 
   const onSubmit = async () => {
-    const config = {
-      headers: {
-        "Content-Type": "application/json"
+    // perform all neccassary validations
+    if ((name || email || password || confirmPassword) === "") {
+      setOpen(true);
+      setErrorMessage("Please fill all required field");
+    } else if (password.length < 5) {
+      setOpen(true);
+      setErrorMessage("Password must have more than 5 characters");
+    } else if (password !== confirmPassword) {
+      setOpen(true);
+      setErrorMessage("Password's not match");
+    } else {
+      dispatch(userActions.register(formData));
+      if (users.error) {
+        // setOpen(true);
+        // setErrorMessage(users.error);
+        setOpen(true);
+        //setErrorMessage(users.error.message);
+        setErrorMessage("Please enter a valid email");
       }
-    };
-
-    const body = JSON.stringify(formData);
-    try {
-      const res = await axios.post("/api/auth/register", body, config);
-      console.log(res.data);
-      console.log("OK");
-    } catch (error) {
-      console.log("fail");
     }
   };
 
@@ -89,7 +111,26 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
-
+        <Collapse className={classes.alertContainer} in={open}>
+          <Alert
+            severity="error"
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <CloseIcon fontSize="inherit" />
+              </IconButton>
+            }
+          >
+            <AlertTitle>Error</AlertTitle>
+            {errorMessage}
+          </Alert>
+        </Collapse>
         <Grid container spacing={2}>
           <Grid item xs={12}>
             <TextField
@@ -101,7 +142,7 @@ export default function SignUp() {
               name="name"
               autoComplete="name"
               value={name}
-              onChange={e => onChange(e)}
+              onChange={(e) => onChange(e)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -114,7 +155,7 @@ export default function SignUp() {
               name="email"
               autoComplete="email"
               value={email}
-              onChange={e => onChange(e)}
+              onChange={(e) => onChange(e)}
             />
           </Grid>
           <Grid item xs={12}>
@@ -127,7 +168,20 @@ export default function SignUp() {
               type="password"
               id="password"
               value={password}
-              onChange={e => onChange(e)}
+              onChange={(e) => onChange(e)}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              variant="outlined"
+              required
+              fullWidth
+              label="Confirm Password"
+              name="confirmPassword"
+              type="password"
+              id="confirm-password"
+              value={confirmPassword}
+              onChange={(e) => onChange(e)}
             />
           </Grid>
           <Grid item xs={12}>

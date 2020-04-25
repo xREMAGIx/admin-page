@@ -22,10 +22,13 @@ import { userActions } from "./_actions";
 
 const App = () => {
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(userActions.getMe());
   }, [dispatch]);
+
   const user = useSelector((state) => state.users);
+
   return (
     // <Provider store={store}>
     <Router history={history}>

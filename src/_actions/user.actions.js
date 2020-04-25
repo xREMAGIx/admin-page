@@ -13,19 +13,28 @@ export const userActions = {
 
 function getMe() {
   return (dispatch) => {
-    dispatch({ type: userConstants.LOGIN_REQUEST });
+    dispatch(request());
 
     userService.getMe().then(
       (user) => {
-        console.log("Get me " + user);
-        dispatch({ type: userConstants.LOGIN_SUCCESS, user });
+        dispatch(success(user));
       },
       (error) => {
-        dispatch({ type: userConstants.LOGIN_FAILURE, error });
+        dispatch(failure(error));
         //dispatch(alertActions.error(error.toString()));
       }
     );
   };
+
+  function request() {
+    return { type: userConstants.GETME_REQUEST };
+  }
+  function success(user) {
+    return { type: userConstants.GETME_SUCCESS, user };
+  }
+  function failure(error) {
+    return { type: userConstants.GETME_FAILURE, error };
+  }
 }
 
 function login(user) {
@@ -35,7 +44,18 @@ function login(user) {
     userService.login(user).then(
       (user) => {
         dispatch(success(user));
-        history.push("/dashboard");
+        dispatch(requestGetMe());
+
+        userService.getMe().then(
+          (user) => {
+            dispatch(successGetMe(user));
+          },
+          (error) => {
+            dispatch(failureGetMe(error));
+            //dispatch(alertActions.error(error.toString()));
+          }
+        );
+        history.push({ pathname: "/dashboard", state: 200 });
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -43,16 +63,26 @@ function login(user) {
       }
     );
   };
-}
 
-function request(user) {
-  return { type: userConstants.LOGIN_REQUEST, user };
-}
-function success(user) {
-  return { type: userConstants.LOGIN_SUCCESS, user };
-}
-function failure(error) {
-  return { type: userConstants.LOGIN_FAILURE, error };
+  function request(user) {
+    return { type: userConstants.LOGIN_REQUEST, user };
+  }
+  function success(user) {
+    return { type: userConstants.LOGIN_SUCCESS, user };
+  }
+  function failure(error) {
+    return { type: userConstants.LOGIN_FAILURE, error };
+  }
+
+  function requestGetMe() {
+    return { type: userConstants.GETME_REQUEST };
+  }
+  function successGetMe(user) {
+    return { type: userConstants.GETME_SUCCESS, user };
+  }
+  function failureGetMe(error) {
+    return { type: userConstants.GETME_FAILURE, error };
+  }
 }
 
 function logout() {
@@ -67,8 +97,8 @@ function register(user) {
 
     userService.register(user).then(
       (user) => {
-        dispatch(success());
-        history.push("/login");
+        dispatch(success(user));
+        history.push({ pathname: "/login", state: 200 });
       },
       (error) => {
         dispatch(failure(error.toString()));

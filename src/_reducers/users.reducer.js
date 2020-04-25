@@ -21,6 +21,20 @@ export function users(state = initialState, action) {
       };
     case userConstants.LOGIN_FAILURE:
       return { error: action.error };
+
+    case userConstants.REGISTER_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userConstants.REGISTER_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
+    case userConstants.REGISTER_FAILURE:
+      return { loading: false, error: action.error };
+
     case userConstants.LOGOUT:
       return {
         ...state,
@@ -28,6 +42,21 @@ export function users(state = initialState, action) {
         isAuthenticated: false,
         user: null,
       };
+
+    case userConstants.GETME_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userConstants.GETME_SUCCESS:
+      return {
+        loading: false,
+        isAuthenticated: true,
+        user: action.user,
+      };
+    case userConstants.GETME_FAILURE:
+      return { error: action.error };
+
     case userConstants.GETALL_REQUEST:
       return {
         loading: true,

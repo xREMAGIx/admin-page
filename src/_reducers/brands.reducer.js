@@ -12,7 +12,6 @@ export function brands(
 ) {
   switch (action.type) {
     case brandConstants.GETALL_REQUEST:
-      console.log(1);
       return {
         ...state,
         loading: true,

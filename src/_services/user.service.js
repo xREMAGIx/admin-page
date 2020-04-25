@@ -18,23 +18,21 @@ async function login(user) {
       "Content-Type": "application/json",
     },
   };
-
   const body = JSON.stringify(user);
 
-  let res;
-  try {
-    res = await axios.post(`/api/auth/login`, body, requestConfig);
-  } catch (error) {
-    console.log(error);
-  }
-
-  return await axios
-    .get(`/api/auth/me`, res.data, requestConfig)
-    .then(handleResponse);
+  await axios
+    .post(`/api/auth/login`, body, requestConfig)
+    .then(handleResponse)
+    .catch((error) => handleResponse(error));
 }
 
 async function getMe() {
-  return await axios.get(`/api/auth/me`).then(handleResponse);
+  const requestConfig = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+  return await axios.get(`/api/auth/me`, requestConfig).then(handleResponse);
 }
 
 async function logout() {
@@ -58,17 +56,20 @@ function getById(id) {
     headers: authHeader(),
   };
 
-  return fetch(`/api/users/${id}`, requestOptions).then(handleResponse);
+  return fetch(`/api/users/${id}`, requestOptions)
+    .then(handleResponse)
+    .catch(handleResponse);
 }
 
-function register(user) {
-  const requestOptions = {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(user),
+async function register(user) {
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+    },
   };
 
-  return fetch(`/api/users/register`, requestOptions).then(handleResponse);
+  const body = JSON.stringify(user);
+  await axios.post("/api/auth/register", body, config).then(handleResponse);
 }
 
 function update(user) {
@@ -92,15 +93,11 @@ function _delete(id) {
 }
 
 function handleResponse(response) {
-  const data = response.data.data;
-  if (response.status !== 200) {
-    // if (response.status === 401) {
-    //   // auto logout if 401 response returned from api
-    //   //logout();
-    //   location.reload(true);
-    // }
+  let data;
+  if (response.data.data) data = response.data.data;
 
-    const error = (data && data.message) || response.statusText;
+  if (response.status !== 200) {
+    const error = (response && response.message) || response.statusText;
     return Promise.reject(error);
   }
 

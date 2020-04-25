@@ -27,6 +27,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Skeleton from "@material-ui/lab/Skeleton";
+import { history } from "../_helpers";
 
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -374,6 +375,10 @@ export default function Products() {
   const categories = useSelector((state) => state.categories);
   const brands = useSelector((state) => state.brands);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    console.log(history.location.state);
+  }, []);
 
   useEffect(() => {
     dispatch(productActions.getAll());

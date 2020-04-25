@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import Box from "@material-ui/core/Box";
@@ -15,7 +15,10 @@ import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Title from "./Title";
 import CustomDrawer from "./CustomDrawer";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 import { useSelector } from "react-redux";
+import { history } from "../_helpers";
 
 function Copyright() {
   return (
@@ -173,14 +176,32 @@ export default function Dashboard() {
   const classes = useStyles();
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+  const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    if (history.location.state === 200) setOpen(true);
+  }, []);
+
+  const handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   const user = useSelector((state) => state.users);
   return (
     <React.Fragment>
+      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity="success">
+          Login successful!
+        </Alert>
+      </Snackbar>
       <div className={classes.root}>
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {console.log(user)}
           <Container maxWidth="lg" className={classes.container}>
             <Grid container spacing={3}>
               {/* Chart */}
