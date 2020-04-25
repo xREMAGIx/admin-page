@@ -78,9 +78,13 @@ export default function SignUp() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const keyPressed = (e) => {
+    if (e.key === "Enter") onSubmit(e);
+  };
+
   const onSubmit = async () => {
     // perform all neccassary validations
-    if ((name || email || password || confirmPassword) === "") {
+    if ((name && email && password && confirmPassword) === "") {
       setOpen(true);
       setErrorMessage("Please fill all required field");
     } else if (password.length < 5) {
@@ -142,6 +146,7 @@ export default function SignUp() {
               name="name"
               autoComplete="name"
               value={name}
+              onKeyPress={(e) => keyPressed(e)}
               onChange={(e) => onChange(e)}
             />
           </Grid>
@@ -155,6 +160,7 @@ export default function SignUp() {
               name="email"
               autoComplete="email"
               value={email}
+              onKeyPress={(e) => keyPressed(e)}
               onChange={(e) => onChange(e)}
             />
           </Grid>
@@ -168,6 +174,7 @@ export default function SignUp() {
               type="password"
               id="password"
               value={password}
+              onKeyPress={(e) => keyPressed(e)}
               onChange={(e) => onChange(e)}
             />
           </Grid>
@@ -181,6 +188,7 @@ export default function SignUp() {
               type="password"
               id="confirm-password"
               value={confirmPassword}
+              onKeyPress={(e) => keyPressed(e)}
               onChange={(e) => onChange(e)}
             />
           </Grid>

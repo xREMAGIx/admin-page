@@ -59,7 +59,6 @@ function login(user) {
       },
       (error) => {
         dispatch(failure(error.toString()));
-        //dispatch(alertActions.error(error.toString()));
       }
     );
   };
@@ -87,7 +86,7 @@ function login(user) {
 
 function logout() {
   userService.logout();
-  window.location.reload();
+  history.push("/");
   return { type: userConstants.LOGOUT };
 }
 
@@ -98,7 +97,7 @@ function register(user) {
     userService.register(user).then(
       (user) => {
         dispatch(success(user));
-        history.push({ pathname: "/login", state: 200 });
+        history.push({ pathname: "/", state: 200 });
       },
       (error) => {
         dispatch(failure(error.toString()));

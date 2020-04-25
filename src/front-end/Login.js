@@ -87,13 +87,17 @@ export default function SignIn() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const keyPressed = (e) => {
+    if (e.key === "Enter") onSubmit(e);
+  };
+
   const onSubmit = () => {
     if (email === "" || password === "") {
       setErrorOpen(true);
       setErrorMessage("Please fill out all required field");
     } else {
       dispatch(userActions.login(formData));
-      if (users.error) {
+      if (!users.user && users.error) {
         setErrorOpen(true);
         setErrorMessage("Wrong email or password!");
       }
@@ -151,6 +155,7 @@ export default function SignIn() {
             autoComplete="email"
             autoFocus
             value={email}
+            onKeyPress={(e) => keyPressed(e)}
             onChange={(e) => onChange(e)}
           />
           <TextField
@@ -163,6 +168,7 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onKeyPress={(e) => keyPressed(e)}
             value={password}
             onChange={(e) => onChange(e)}
           />
