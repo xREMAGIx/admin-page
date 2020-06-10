@@ -41,24 +41,18 @@ async function logout() {
   localStorage.removeItem("user");
 }
 
-function getAll() {
-  const requestOptions = {
-    method: "GET",
-    headers: authHeader(),
+async function getAll() {
+  const requestConfig = {
+    headers: {},
   };
-
-  return fetch(`/api/users`, requestOptions).then(handleResponse);
+  return await axios.get(`/api/user`, requestConfig).then(handleResponse);
 }
 
-function getById(id) {
-  const requestOptions = {
-    method: "GET",
-    headers: authHeader(),
+async function getById(id) {
+  const requestConfig = {
+    headers: {},
   };
-
-  return fetch(`/api/users/${id}`, requestOptions)
-    .then(handleResponse)
-    .catch(handleResponse);
+  return await axios.get(`/api/user/${id}`, requestConfig).then(handleResponse);
 }
 
 async function register(user) {
@@ -93,13 +87,16 @@ function _delete(id) {
 }
 
 function handleResponse(response) {
-  let data;
-  if (response.data.data) data = response.data.data;
+  let data = response.data;
+  let token;
 
-  if (response.status !== 200) {
+  if (response.data.token) token = response.data.token;
+
+  if (response.status > 400) {
     const error = (response && response.message) || response.statusText;
     return Promise.reject(error);
   }
 
-  return data;
+  if (token) return token;
+  else return data;
 }

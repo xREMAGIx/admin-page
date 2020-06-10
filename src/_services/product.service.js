@@ -12,6 +12,7 @@ export const productService = {
 async function getAll() {
   const requestConfig = {
     //headers: authHeader()
+    
   };
   console.log(2);
   return await axios.get(`/api/products`, requestConfig).then(handleResponse);

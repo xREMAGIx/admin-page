@@ -83,7 +83,6 @@ async function update(id, category, image) {
   };
 
   const body = JSON.stringify(category);
-  console.log(body);
 
   if (imageData.get("image")) {
     try {

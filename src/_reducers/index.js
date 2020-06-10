@@ -8,16 +8,16 @@ import { posts } from "./posts.reducer";
 import { banners } from "./banners.reducer";
 import { categories } from "./categories.reducer";
 import { brands } from "./brands.reducer";
+import { orders } from "./orders.reducer";
 
 const rootReducer = combineReducers({
-  //   authentication,
-  //   registration,
   banners,
   posts,
   products,
   categories,
   users,
   brands,
+  orders,
 });
 
 export default rootReducer;

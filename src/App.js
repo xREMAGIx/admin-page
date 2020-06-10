@@ -1,24 +1,34 @@
 import React, { useEffect } from "react";
-import "./App.css";
 import PropTypes from "prop-types";
 import { Router, Route, Switch } from "react-router-dom";
-import Dashboard from "./front-end/Dashboard";
-import Orders from "./front-end/Orders";
+import { history } from "./_helpers";
+import { useSelector, useDispatch } from "react-redux";
+import { userActions } from "./_actions";
+
+import AdminRoute from "./front-end/components/AdminRoute";
+
+//Pages Imports
+import Login from "./front-end/Login";
+import Register from "./front-end/Register";
+
 import Products from "./front-end/Products";
 import ProductsAdd from "./front-end/ProductsAdd";
 import ProductsEdit from "./front-end/ProductsEdit";
-import Login from "./front-end/Login";
-import Register from "./front-end/Register";
-import { history } from "./_helpers";
+
+import Dashboard from "./front-end/Dashboard";
+
+import Orders from "./front-end/Orders";
+import OrdersEdit from "./front-end/OrdersEdit";
+
 import Banner from "./front-end/Banner";
+
 import Posts from "./front-end/Posts";
 import PostsAdd from "./front-end/PostsAdd";
 import PostsEdit from "./front-end/PostsEdit";
+
 import Categories from "./front-end/Categories";
+
 import Brands from "./front-end/Brands";
-import AdminRoute from "./front-end/components/AdminRoute";
-import { useSelector, useDispatch } from "react-redux";
-import { userActions } from "./_actions";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -33,11 +43,11 @@ const App = () => {
     // <Provider store={store}>
     <Router history={history}>
       <Switch>
-        <Route exact path="/" component={Login}></Route>
+        <Route exact path="/login" component={Login}></Route>
         <Route exact path="/register" component={Register}></Route>
         <AdminRoute
           exact
-          path="/dashboard"
+          path="/"
           user={user}
           component={Dashboard}
         ></AdminRoute>
@@ -62,6 +72,12 @@ const App = () => {
           path="/orders"
           user={user}
           component={Orders}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/orders-edit/:id"
+          user={user}
+          component={OrdersEdit}
         ></AdminRoute>
         <AdminRoute
           exact

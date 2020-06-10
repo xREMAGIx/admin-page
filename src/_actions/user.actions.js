@@ -7,6 +7,7 @@ export const userActions = {
   logout,
   register,
   getAll,
+  getById,
   delete: _delete,
   getMe,
 };
@@ -55,7 +56,7 @@ function login(user) {
             //dispatch(alertActions.error(error.toString()));
           }
         );
-        history.push({ pathname: "/dashboard", state: 200 });
+        history.push({ pathname: "/", state: 200 });
       },
       (error) => {
         dispatch(failure(error.toString()));
@@ -86,7 +87,7 @@ function login(user) {
 
 function logout() {
   userService.logout();
-  history.push("/");
+  history.push("/login");
   return { type: userConstants.LOGOUT };
 }
 
@@ -117,12 +118,22 @@ function register(user) {
 }
 
 function getAll() {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(request());
 
-    userService.getAll().then(
+    await userService.getAll().then(
       (users) => dispatch(success(users)),
-      (error) => dispatch(failure(error.toString()))
+      (error) => {
+        if (error.response && error.response.data) {
+          let errorkey = Object.keys(error.response.data)[0];
+
+          let errorValue = error.response.data[errorkey][0];
+
+          dispatch(failure(errorkey.toUpperCase() + ": " + errorValue));
+        } else {
+          dispatch(failure(error.toString()));
+        }
+      }
     );
   };
 
@@ -134,6 +145,37 @@ function getAll() {
   }
   function failure(error) {
     return { type: userConstants.GETALL_FAILURE, error };
+  }
+}
+
+function getById(id) {
+  return async (dispatch) => {
+    dispatch(request());
+
+    await userService.getById(id).then(
+      (users) => dispatch(success(users)),
+      (error) => {
+        if (error.response && error.response.data) {
+          let errorkey = Object.keys(error.response.data)[0];
+
+          let errorValue = error.response.data[errorkey][0];
+
+          dispatch(failure(errorkey.toUpperCase() + ": " + errorValue));
+        } else {
+          dispatch(failure(error.toString()));
+        }
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.GETBYID_REQUEST };
+  }
+  function success(users) {
+    return { type: userConstants.GETBYID_SUCCESS, users };
+  }
+  function failure(error) {
+    return { type: userConstants.GETBYID_FAILURE, error };
   }
 }
 

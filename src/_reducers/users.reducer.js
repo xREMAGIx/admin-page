@@ -50,25 +50,49 @@ export function users(state = initialState, action) {
       };
     case userConstants.GETME_SUCCESS:
       return {
+        ...state,
         loading: false,
         isAuthenticated: true,
-        user: action.user,
+        user: action.user.data,
       };
     case userConstants.GETME_FAILURE:
-      return { error: action.error };
-
+      return {
+        ...state,
+        error: action.error,
+      };
+    //GET ALL
     case userConstants.GETALL_REQUEST:
       return {
+        ...state,
         loading: true,
       };
     case userConstants.GETALL_SUCCESS:
       return {
-        items: action.users,
+        ...state,
+        items: action.users.data,
       };
     case userConstants.GETALL_FAILURE:
       return {
+        ...state,
         error: action.error,
       };
+    //GET BY ID
+    case userConstants.GETBYID_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case userConstants.GETBYID_SUCCESS:
+      return {
+        ...state,
+        item: action.users.data,
+      };
+    case userConstants.GETBYID_FAILURE:
+      return {
+        ...state,
+        error: action.error,
+      };
+
     case userConstants.DELETE_REQUEST:
       // add 'deleting:true' property to user being deleted
       return {
