@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import PropTypes from "prop-types";
 import { Router, Route, Switch } from "react-router-dom";
 import { history } from "./_helpers";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,7 +6,6 @@ import { userActions } from "./_actions";
 
 import AdminRoute from "./front-end/components/AdminRoute";
 
-//Pages Imports
 import Login from "./front-end/Login";
 import Register from "./front-end/Register";
 
@@ -42,7 +40,6 @@ const App = () => {
   }, [dispatch]);
 
   return (
-    // <Provider store={store}>
     <Router history={history}>
       <Switch>
         <Route exact path="/login" component={Login}></Route>
@@ -99,7 +96,6 @@ const App = () => {
           path="/posts-edit/:id"
           component={PostsEdit}
         ></AdminRoute>
-        {/* <Route exact path="/text-editor" component={TextEditor}></Route> */}
         <AdminRoute
           exact
           path="/categories"
@@ -121,12 +117,7 @@ const App = () => {
         <AdminRoute render={() => <h1>404: page not found</h1>} />
       </Switch>
     </Router>
-    // </Provider>
   );
-};
-
-App.propTypes = {
-  store: PropTypes.object.isRequired,
 };
 
 export default App;
