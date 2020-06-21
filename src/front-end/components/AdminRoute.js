@@ -20,7 +20,3 @@ const AdminRoute = ({ component: Component, user, ...rest }) => {
 };
 
 export default AdminRoute;
-//
-// const mapStateToProps = state => ({
-//   auth: state.auth
-// });

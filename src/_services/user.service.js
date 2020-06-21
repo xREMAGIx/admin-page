@@ -12,6 +12,14 @@ export const userService = {
   getMe,
 };
 
+const setAuthToken = (token) => {
+  if (token) {
+    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+  } else {
+    delete axios.defaults.headers.common["Authorization"];
+  }
+};
+
 async function login(user) {
   const requestConfig = {
     headers: {
@@ -20,13 +28,13 @@ async function login(user) {
   };
   const body = JSON.stringify(user);
 
-  await axios
+  return await axios
     .post(`/api/auth/login`, body, requestConfig)
-    .then(handleResponse)
-    .catch((error) => handleResponse(error));
+    .then(handleResponse);
 }
 
-async function getMe() {
+async function getMe(token) {
+  setAuthToken(token);
   const requestConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -88,15 +96,13 @@ function _delete(id) {
 
 function handleResponse(response) {
   let data = response.data;
-  let token;
 
-  if (response.data.token) token = response.data.token;
+  console.log(response);
 
   if (response.status > 400) {
     const error = (response && response.message) || response.statusText;
     return Promise.reject(error);
   }
 
-  if (token) return token;
-  else return data;
+  return data;
 }

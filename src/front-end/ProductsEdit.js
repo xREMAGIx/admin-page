@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import { productActions } from "../_actions";
+import backendUrl from "../_constants";
 import Skeleton from "@material-ui/lab/Skeleton";
 
 const useStyles = makeStyles((theme) => ({
@@ -390,9 +391,7 @@ export default function ProductEdit(props) {
                               style={{ width: "100%" }}
                             >
                               <img
-                                src={
-                                  "http://localhost:5000/uploads/" + item.path
-                                }
+                                src={`${backendUrl}/uploads/` + item.path}
                                 alt={"No data"}
                               />
                               <GridListTileBar

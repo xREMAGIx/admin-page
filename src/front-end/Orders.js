@@ -56,8 +56,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-  console.log(array);
-  console.log(Array.isArray(array));
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -398,10 +396,6 @@ export default function Orders() {
     setSearchTerm(event.target.value);
   };
 
-  useEffect(() => {
-    console.log(orders.items);
-  }, [orders.items]);
-
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -459,7 +453,6 @@ export default function Orders() {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {/* {console.log(posts.items)} */}
           <Container maxWidth="lg" className={classes.mainContainer}>
             {!orders.items || !users.items ? (
               <Skeleton variant="rect" width={"100%"} height={50} />
@@ -478,7 +471,12 @@ export default function Orders() {
                 aria-label="enhanced table"
               >
                 {!orders.items || !users.items ? (
-                  <Skeleton variant="rect" width={"100%"} height={40} />
+                  <Skeleton
+                    component={"thead"}
+                    variant="rect"
+                    width={"100%"}
+                    height={40}
+                  />
                 ) : (
                   <EnhancedTableHead
                     classes={classes}
@@ -492,6 +490,7 @@ export default function Orders() {
                 )}
                 {!orders.items || !users.items ? (
                   <Skeleton
+                    component="tbody"
                     variant="rect"
                     width={"100%"}
                     height={100}
@@ -524,13 +523,10 @@ export default function Orders() {
                                 inputProps={{ "aria-labelledby": labelId }}
                               />
                             </TableCell>
-                            <TableCell
-                              scope="row"
-                              padding="none"
-                              component={Link}
-                              to={"/orders-edit/" + row._id}
-                            >
-                              {row._id}
+                            <TableCell scope="row" padding="none">
+                              <Link to={"/orders-edit/" + row._id}>
+                                {row._id}
+                              </Link>
                             </TableCell>
                             <TableCell
                               component="th"

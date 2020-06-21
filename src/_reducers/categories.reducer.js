@@ -5,7 +5,7 @@ export function categories(
     loading: false,
     adding: false,
     updating: false,
-    items: [],
+    items: null,
     item: [],
   },
   action

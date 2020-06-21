@@ -5,3 +5,6 @@ export * from "./banner.constants";
 export * from "./category.constants";
 export * from "./brand.constants";
 export * from "./order.constants";
+
+const backendUrl = "https://nexjs-eshop-backend.herokuapp.com";
+export default backendUrl;

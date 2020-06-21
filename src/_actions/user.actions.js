@@ -12,11 +12,11 @@ export const userActions = {
   getMe,
 };
 
-function getMe() {
-  return (dispatch) => {
+function getMe(token) {
+  return async (dispatch) => {
     dispatch(request());
 
-    userService.getMe().then(
+    await userService.getMe(token).then(
       (user) => {
         dispatch(success(user));
       },
@@ -39,23 +39,14 @@ function getMe() {
 }
 
 function login(user) {
-  return (dispatch) => {
-    dispatch(request({ user }));
+  return async (dispatch) => {
+    dispatch(request(user));
 
-    userService.login(user).then(
-      (user) => {
-        dispatch(success(user));
-        dispatch(requestGetMe());
+    await userService.login(user).then(
+      (data) => {
+        dispatch(success(data));
+        dispatch(getMe(data.token));
 
-        userService.getMe().then(
-          (user) => {
-            dispatch(successGetMe(user));
-          },
-          (error) => {
-            dispatch(failureGetMe(error));
-            //dispatch(alertActions.error(error.toString()));
-          }
-        );
         history.push({ pathname: "/", state: 200 });
       },
       (error) => {
@@ -67,21 +58,11 @@ function login(user) {
   function request(user) {
     return { type: userConstants.LOGIN_REQUEST, user };
   }
-  function success(user) {
-    return { type: userConstants.LOGIN_SUCCESS, user };
+  function success(data) {
+    return { type: userConstants.LOGIN_SUCCESS, data };
   }
   function failure(error) {
     return { type: userConstants.LOGIN_FAILURE, error };
-  }
-
-  function requestGetMe() {
-    return { type: userConstants.GETME_REQUEST };
-  }
-  function successGetMe(user) {
-    return { type: userConstants.GETME_SUCCESS, user };
-  }
-  function failureGetMe(error) {
-    return { type: userConstants.GETME_FAILURE, error };
   }
 }
 

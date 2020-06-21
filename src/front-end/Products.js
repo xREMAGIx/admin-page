@@ -27,6 +27,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Skeleton from "@material-ui/lab/Skeleton";
+import backendUrl from "../_constants";
 import { history } from "../_helpers";
 
 function dateFormat(date) {
@@ -368,6 +369,7 @@ export default function Products() {
 
   const [searchResults, setSearchResults] = React.useState([]);
   const [searchTerm, setSearchTerm] = React.useState("");
+  const [productsInfo, setProductsInfo] = React.useState();
 
   //const user = useSelector(state => state.authentication.user);
 
@@ -377,21 +379,29 @@ export default function Products() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    console.log(history.location.state);
-  }, []);
-
-  useEffect(() => {
     dispatch(productActions.getAll());
   }, [dispatch]);
 
   useEffect(() => {
-    if (products.items) {
-      const results = products.items.filter((product) =>
-        product.productName.toLowerCase().includes(searchTerm)
-      );
-      setSearchResults(results);
-    }
-  }, [searchTerm, products.items]);
+    setProductsInfo(
+      products.items && brands.items && categories.items
+        ? products.items.map((element) =>
+            Object.assign({
+              ...element,
+              category: categories.items.find(
+                (category) => category.id === element.category
+              ).name,
+              brand: brands.items.find((brand) => brand.id === element.brand)
+                .name,
+            })
+          )
+        : null
+    );
+  }, [products.items, brands.items, categories.items]);
+
+  useEffect(() => {
+    console.log(productsInfo);
+  }, [productsInfo]);
 
   const handleChange = (event) => {
     setSearchTerm(event.target.value);
@@ -456,7 +466,7 @@ export default function Products() {
           <div className={classes.appBarSpacer} />
 
           <Container maxWidth="lg" className={classes.mainContainer}>
-            {!products.items ? (
+            {!productsInfo ? (
               <Skeleton
                 variant="rect"
                 width={"100%"}
@@ -477,8 +487,13 @@ export default function Products() {
                 aria-labelledby="tableTitle"
                 aria-label="enhanced table"
               >
-                {!products.items ? (
-                  <Skeleton variant="rect" width={"100%"} height={40} />
+                {!productsInfo ? (
+                  <Skeleton
+                    component="thead"
+                    variant="rect"
+                    width={"100%"}
+                    height={40}
+                  />
                 ) : (
                   <EnhancedTableHead
                     classes={classes}
@@ -487,15 +502,20 @@ export default function Products() {
                     orderBy={orderBy}
                     onSelectAllClick={handleSelectAllClick}
                     onRequestSort={handleRequestSort}
-                    rowCount={products.items.length}
+                    rowCount={productsInfo.length}
                   />
                 )}
-                {!products.items ? (
-                  <Skeleton variant="rect" width={"100%"} height={100} />
+                {!productsInfo ? (
+                  <Skeleton
+                    component="tbody"
+                    variant="rect"
+                    width={"100%"}
+                    height={100}
+                  />
                 ) : (
                   <TableBody>
-                    {Array.isArray(products.items) &&
-                      stableSort(searchResults, getComparator(order, orderBy))
+                    {Array.isArray(productsInfo) &&
+                      stableSort(productsInfo, getComparator(order, orderBy))
                         .slice(
                           page * rowsPerPage,
                           page * rowsPerPage + rowsPerPage
@@ -540,25 +560,17 @@ export default function Products() {
                                 </Grid>
                               </TableCell>
                               <TableCell scope="row" padding="none">
-                                {categories.items.length !== 0
-                                  ? categories.items.filter((category) => {
-                                      return category._id === row.category;
-                                    })[0].name
-                                  : null}
+                                {row.category}
                               </TableCell>
                               <TableCell scope="row" padding="none">
-                                {brands.items.length !== 0
-                                  ? brands.items.filter((brand) => {
-                                      return brand._id === row.brand;
-                                    })[0].name
-                                  : null}
+                                {row.brand}
                               </TableCell>
                               <TableCell padding="none">
                                 {row.images.length > 0 ? (
                                   <img
                                     className={classes.img}
                                     src={
-                                      "http://localhost:5000/uploads/" +
+                                      ` ${backendUrl}/uploads/` +
                                       row.images[0].path
                                     }
                                     alt="broken"
@@ -602,7 +614,7 @@ export default function Products() {
                 )}
               </Table>
             </TableContainer>
-            {!products.items ? (
+            {!productsInfo ? (
               <Skeleton
                 variant="rect"
                 width={400}
@@ -613,7 +625,7 @@ export default function Products() {
               <TablePagination
                 rowsPerPageOptions={[5, 10, 25]}
                 component="div"
-                count={products.items.length}
+                count={productsInfo.length}
                 rowsPerPage={rowsPerPage}
                 page={page}
                 onChangePage={handleChangePage}

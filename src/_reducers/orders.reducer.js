@@ -5,7 +5,7 @@ export function orders(
     loading: false,
     adding: false,
     updating: false,
-    items: [],
+    items: null,
     item: [],
   },
   action
@@ -23,6 +23,7 @@ export function orders(
       };
     case orderConstants.GETALL_FAILURE:
       return {
+        ...state,
         error: action.error,
       };
 

@@ -12,6 +12,7 @@ import Paper from "@material-ui/core/Paper";
 
 import { useDispatch, useSelector } from "react-redux";
 import { bannerActions } from "../_actions";
+import backendUrl from "../_constants";
 
 import Carousel from "./components/Carousel";
 
@@ -147,7 +148,7 @@ function Project(props) {
       {props.item.path && (
         <CardMedia
           className={classes.media}
-          image={"http://localhost:5000/uploads/" + props.item.path}
+          image={`${backendUrl}/uploads/` + props.item.path}
           // title={props.item.name}
         />
       )}
@@ -255,7 +256,7 @@ export default function Banner() {
                 formData.map((item) => (
                   <GridListTile key={item._id}>
                     <img
-                      src={"http://localhost:5000/uploads/" + item.path}
+                      src={`${backendUrl}/uploads/` + item.path}
                       alt={"No data"}
                     />
                     <GridListTileBar
@@ -296,24 +297,6 @@ export default function Banner() {
               Preview banners carousel:
             </Typography>
 
-            {/* Ebay Carousel */}
-            {/* <Carousel
-              autoPlay={autoPlay}
-              timer={timer}
-              animation={animation}
-              indicators={indicators}
-            >
-              {items.map((item, index) => {
-                return (
-                  <BannerCreate
-                    item={item}
-                    key={index}
-                    contentPosition={item.contentPosition}
-                  />
-                );
-              })}
-            </Carousel> */}
-            {console.log(previewBanners)}
             {/* Normal Carousel */}
             {previewBanners !== undefined && (
               <Carousel

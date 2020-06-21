@@ -1,10 +1,13 @@
 import { userConstants } from "../_constants";
+import Cookies from "universal-cookie";
 
 const initialState = {
   loading: true,
   isAuthenticated: false,
   user: null,
 };
+
+const cookies = new Cookies();
 
 export function users(state = initialState, action) {
   switch (action.type) {
@@ -14,13 +17,13 @@ export function users(state = initialState, action) {
         loading: true,
       };
     case userConstants.LOGIN_SUCCESS:
+      cookies.set("token", action.data.token);
       return {
         loading: false,
         isAuthenticated: true,
-        user: action.user,
       };
     case userConstants.LOGIN_FAILURE:
-      return { error: action.error };
+      return { ...state, error: action.error };
 
     case userConstants.REGISTER_REQUEST:
       return {
@@ -33,12 +36,13 @@ export function users(state = initialState, action) {
         loading: false,
       };
     case userConstants.REGISTER_FAILURE:
-      return { loading: false, error: action.error };
+      return { ...state, loading: false, error: action.error };
 
     case userConstants.LOGOUT:
+      cookies.remove("token");
       return {
         ...state,
-        loading: true,
+        loading: false,
         isAuthenticated: false,
         user: null,
       };
@@ -58,6 +62,7 @@ export function users(state = initialState, action) {
     case userConstants.GETME_FAILURE:
       return {
         ...state,
+        loading: false,
         error: action.error,
       };
     //GET ALL

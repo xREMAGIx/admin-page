@@ -30,14 +30,16 @@ import Categories from "./front-end/Categories";
 
 import Brands from "./front-end/Brands";
 
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+
 const App = () => {
   const dispatch = useDispatch();
+  const user = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(userActions.getMe());
+    dispatch(userActions.getMe(cookies.get("token")));
   }, [dispatch]);
-
-  const user = useSelector((state) => state.users);
 
   return (
     // <Provider store={store}>
