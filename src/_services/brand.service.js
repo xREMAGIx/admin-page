@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const brandService = {
   getAll,
@@ -14,7 +15,9 @@ async function getAll() {
     //headers: authHeader()
   };
 
-  return await axios.get(`/api/brands`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/brands`, requestConfig)
+    .then(handleResponse);
 }
 
 async function getById(id) {
@@ -22,7 +25,7 @@ async function getById(id) {
     headers: authHeader(),
   };
   return await axios
-    .get(`/api/brands/${id}`, requestConfig)
+    .get(`${backendUrl}/api/brands/${id}`, requestConfig)
     .then(handleResponse);
 }
 
@@ -43,7 +46,7 @@ async function add(brand, image) {
   if (imageData.get("image")) {
     let res;
     try {
-      res = await axios.post(`/api/brands`, body, requestConfig);
+      res = await axios.post(`${backendUrl}/api/brands`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +59,7 @@ async function add(brand, image) {
     try {
       return await axios
         .put(
-          "/api/brands/" + res.data.data._id + "/image",
+          `${backendUrl}/api/brands/` + res.data.data._id + "/image",
           imageData,
           configFormData
         )
@@ -66,7 +69,7 @@ async function add(brand, image) {
     }
   } else {
     return await axios
-      .post("/api/brands", body, requestConfig)
+      .post(`${backendUrl}/api/brands`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -87,7 +90,7 @@ async function update(id, brand, image) {
 
   if (imageData.get("image")) {
     try {
-      await axios.put(`/api/brands/${id}`, body, requestConfig);
+      await axios.put(`${backendUrl}/api/brands/${id}`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -99,14 +102,18 @@ async function update(id, brand, image) {
     };
     try {
       return await axios
-        .put("/api/brands/" + id + "/image", imageData, configFormData)
+        .put(
+          `${backendUrl}/api/brands/` + id + "/image",
+          imageData,
+          configFormData
+        )
         .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
   } else {
     return await axios
-      .put(`/api/brands/${id}`, body, requestConfig)
+      .put(`${backendUrl}/api/brands/${id}`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -118,13 +125,13 @@ async function _delete(id) {
   };
 
   return await axios
-    .delete(`/api/brands/${id}`, requestConfig)
+    .delete(`${backendUrl}/api/brands/${id}`, requestConfig)
     .then(handleResponse);
 }
 
 function handleResponse(response) {
   const data = response.data.data;
-  if (response.status !== 200) {
+  if (response.status > 400) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
     //   //logout();

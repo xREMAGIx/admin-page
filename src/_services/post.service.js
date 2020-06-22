@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const postService = {
   getAll,
@@ -14,7 +15,9 @@ async function getAll() {
     //headers: authHeader()
   };
 
-  return await axios.get(`/api/posts`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/posts`, requestConfig)
+    .then(handleResponse);
 }
 
 async function getById(id) {
@@ -22,7 +25,7 @@ async function getById(id) {
     headers: authHeader(),
   };
   return await axios
-    .get(`/api/posts/${id}`, requestConfig)
+    .get(`${backendUrl}/api/posts/${id}`, requestConfig)
     .then(handleResponse);
 }
 
@@ -44,7 +47,7 @@ async function add(post, image) {
   if (imageData.get("image")) {
     let res;
     try {
-      res = await axios.post(`/api/posts`, body, requestConfig);
+      res = await axios.post(`${backendUrl}/api/posts`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -57,7 +60,7 @@ async function add(post, image) {
     try {
       return await axios
         .put(
-          "/api/posts/" + res.data.data._id + "/image",
+          `${backendUrl}/api/posts/` + res.data.data._id + "/image",
           imageData,
           configFormData
         )
@@ -67,7 +70,7 @@ async function add(post, image) {
     }
   } else {
     return await axios
-      .post("/api/posts", body, requestConfig)
+      .post(`${backendUrl}/api/posts`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -88,7 +91,7 @@ async function update(id, post, image) {
 
   if (imageData.get("image")) {
     try {
-      await axios.put(`/api/post/${id}`, body, requestConfig);
+      await axios.put(`${backendUrl}/api/post/${id}`, body, requestConfig);
     } catch (error) {
       console.log(error);
     }
@@ -100,14 +103,18 @@ async function update(id, post, image) {
     };
     try {
       return await axios
-        .put("/api/posts/" + id + "/image", imageData, configFormData)
+        .put(
+          `${backendUrl}/api/posts/` + id + "/image",
+          imageData,
+          configFormData
+        )
         .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
   } else {
     return await axios
-      .put(`/api/posts/${id}`, body, requestConfig)
+      .put(`${backendUrl}/api/posts/${id}`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -119,13 +126,13 @@ async function _delete(id) {
   };
 
   return await axios
-    .delete(`/api/posts/${id}`, requestConfig)
+    .delete(`${backendUrl}/api/posts/${id}`, requestConfig)
     .then(handleResponse);
 }
 
 function handleResponse(response) {
   const data = response.data.data;
-  if (response.status !== 200) {
+  if (response.status > 400) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
     //   //logout();

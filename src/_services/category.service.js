@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const categoryService = {
   getAll,
@@ -14,7 +15,9 @@ async function getAll() {
     //headers: authHeader()
   };
 
-  return await axios.get(`/api/categories`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/categories`, requestConfig)
+    .then(handleResponse);
 }
 
 async function getById(id) {
@@ -22,7 +25,7 @@ async function getById(id) {
     headers: authHeader(),
   };
   return await axios
-    .get(`/api/categories/${id}`, requestConfig)
+    .get(`${backendUrl}/api/categories/${id}`, requestConfig)
     .then(handleResponse);
 }
 
@@ -38,12 +41,15 @@ async function add(category, image) {
   };
 
   const body = JSON.stringify(category);
-  console.log(body);
 
   if (imageData.get("image")) {
     let res;
     try {
-      res = await axios.post(`/api/categories`, body, requestConfig);
+      res = await axios.post(
+        `${backendUrl}/api/categories`,
+        body,
+        requestConfig
+      );
     } catch (error) {
       console.log(error);
     }
@@ -56,7 +62,7 @@ async function add(category, image) {
     try {
       return await axios
         .put(
-          "/api/categories/" + res.data.data._id + "/image",
+          `${backendUrl}/api/categories/` + res.data.data._id + "/image",
           imageData,
           configFormData
         )
@@ -66,7 +72,7 @@ async function add(category, image) {
     }
   } else {
     return await axios
-      .post("/api/categories", body, requestConfig)
+      .post(`${backendUrl}/api/categories`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -86,7 +92,11 @@ async function update(id, category, image) {
 
   if (imageData.get("image")) {
     try {
-      await axios.put(`/api/categories/${id}`, body, requestConfig);
+      await axios.put(
+        `${backendUrl}/api/categories/${id}`,
+        body,
+        requestConfig
+      );
     } catch (error) {
       console.log(error);
     }
@@ -98,14 +108,18 @@ async function update(id, category, image) {
     };
     try {
       return await axios
-        .put("/api/categories/" + id + "/image", imageData, configFormData)
+        .put(
+          `${backendUrl}/api/categories/` + id + "/image",
+          imageData,
+          configFormData
+        )
         .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
   } else {
     return await axios
-      .put(`/api/categories/${id}`, body, requestConfig)
+      .put(`${backendUrl}/api/categories/${id}`, body, requestConfig)
       .then(handleResponse);
   }
 }
@@ -117,13 +131,13 @@ async function _delete(id) {
   };
 
   return await axios
-    .delete(`/api/categories/${id}`, requestConfig)
+    .delete(`${backendUrl}/api/categories/${id}`, requestConfig)
     .then(handleResponse);
 }
 
 function handleResponse(response) {
   const data = response.data.data;
-  if (response.status !== 200) {
+  if (response.status > 400) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
     //   //logout();

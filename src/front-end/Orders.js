@@ -28,6 +28,9 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import SearchIcon from "@material-ui/icons/Search";
 import CreateIcon from "@material-ui/icons/Create";
 
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
+
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
     second: "numeric",
@@ -388,6 +391,7 @@ export default function Orders() {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    dispatch(userActions.getMe(cookies.get("token")));
     dispatch(userActions.getAll());
     dispatch(orderActions.getAll());
   }, [dispatch]);

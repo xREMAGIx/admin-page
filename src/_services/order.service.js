@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const orderService = {
   getAll,
@@ -12,7 +13,9 @@ async function getAll() {
     headers: authHeader(),
   };
 
-  return await axios.get(`/api/orders`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/orders`, requestConfig)
+    .then(handleResponse);
 }
 
 async function getById(id) {
@@ -20,7 +23,7 @@ async function getById(id) {
     headers: authHeader(),
   };
   return await axios
-    .get(`/api/orders/${id}`, requestConfig)
+    .get(`${backendUrl}/api/orders/${id}`, requestConfig)
     .then(handleResponse);
 }
 
@@ -33,11 +36,8 @@ async function update(id, data) {
     },
   };
 
-  console.log(11111111111111111111111111111);
-  console.log(body);
-
   return await axios
-    .post(`/api/orders/${id}`, body, requestConfig)
+    .post(`${backendUrl}/api/orders/${id}`, body, requestConfig)
     .then(handleResponse);
 }
 

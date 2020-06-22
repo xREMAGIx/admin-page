@@ -1,5 +1,6 @@
 //import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const bannerService = {
   getAll,
@@ -12,7 +13,9 @@ async function getAll() {
     //headers: authHeader()
   };
 
-  return await axios.get(`/api/banner`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/banner`, requestConfig)
+    .then(handleResponse);
 }
 
 async function add(image) {
@@ -32,7 +35,7 @@ async function add(image) {
       },
     };
     return await axios
-      .post("/api/banner", imageData, configFormData)
+      .post(`${backendUrl}/api/banner`, imageData, configFormData)
       .then(handleResponse);
   }
 }
@@ -40,7 +43,9 @@ async function add(image) {
 async function _delete(delImage) {
   for (let i = 0; i < delImage.length; i++)
     try {
-      await axios.delete("/api/banner/" + delImage[i]).then(handleResponse);
+      await axios
+        .delete(`${backendUrl}/api/banner/` + delImage[i])
+        .then(handleResponse);
     } catch (error) {
       console.log(error);
     }
@@ -49,7 +54,7 @@ async function _delete(delImage) {
 function handleResponse(response) {
   const data = response.data.data;
   console.log(data);
-  if (response.status !== 200) {
+  if (response.status > 400) {
     // if (response.status === 401) {
     //   // auto logout if 401 response returned from api
     //   //logout();

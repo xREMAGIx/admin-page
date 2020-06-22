@@ -1,5 +1,6 @@
 import { authHeader } from "../_helpers";
 import axios from "axios";
+import backendUrl from "../_constants";
 
 export const userService = {
   login,
@@ -29,7 +30,7 @@ async function login(user) {
   const body = JSON.stringify(user);
 
   return await axios
-    .post(`/api/auth/login`, body, requestConfig)
+    .post(`${backendUrl}/api/auth/login`, body, requestConfig)
     .then(handleResponse);
 }
 
@@ -40,12 +41,14 @@ async function getMe(token) {
       "Content-Type": "application/json",
     },
   };
-  return await axios.get(`/api/auth/me`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/auth/me`, requestConfig)
+    .then(handleResponse);
 }
 
 async function logout() {
   // remove user from local storage to log user out
-  await axios.post("/api/auth/logout");
+  await axios.post("${backendUrl}/api/auth/logout");
   localStorage.removeItem("user");
 }
 
@@ -53,14 +56,18 @@ async function getAll() {
   const requestConfig = {
     headers: {},
   };
-  return await axios.get(`/api/user`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/user`, requestConfig)
+    .then(handleResponse);
 }
 
 async function getById(id) {
   const requestConfig = {
     headers: {},
   };
-  return await axios.get(`/api/user/${id}`, requestConfig).then(handleResponse);
+  return await axios
+    .get(`${backendUrl}/api/user/${id}`, requestConfig)
+    .then(handleResponse);
 }
 
 async function register(user) {
@@ -71,7 +78,9 @@ async function register(user) {
   };
 
   const body = JSON.stringify(user);
-  await axios.post("/api/auth/register", body, config).then(handleResponse);
+  await axios
+    .post("${backendUrl}/api/auth/register", body, config)
+    .then(handleResponse);
 }
 
 function update(user) {
@@ -81,7 +90,9 @@ function update(user) {
     body: JSON.stringify(user),
   };
 
-  return fetch(`/api/users/${user.id}`, requestOptions).then(handleResponse);
+  return fetch(`${backendUrl}/api/users/${user.id}`, requestOptions).then(
+    handleResponse
+  );
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
@@ -91,7 +102,9 @@ function _delete(id) {
     headers: authHeader(),
   };
 
-  return fetch(`/api/users/${id}`, requestOptions).then(handleResponse);
+  return fetch(`${backendUrl}/api/users/${id}`, requestOptions).then(
+    handleResponse
+  );
 }
 
 function handleResponse(response) {
