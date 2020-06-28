@@ -12,16 +12,17 @@ export const userActions = {
   getMe,
 };
 
-function getMe(token) {
+function getMe() {
   return async (dispatch) => {
     dispatch(request());
 
-    await userService.getMe(token).then(
+    await userService.getMe().then(
       (user) => {
         dispatch(success(user));
       },
       (error) => {
         dispatch(failure(error));
+        history.push({ pathname: "/login", state: 404 });
         //dispatch(alertActions.error(error.toString()));
       }
     );
@@ -45,7 +46,7 @@ function login(user) {
     await userService.login(user).then(
       (data) => {
         dispatch(success(data));
-        dispatch(getMe(data.token));
+        dispatch(getMe());
 
         history.push({ pathname: "/", state: 200 });
       },

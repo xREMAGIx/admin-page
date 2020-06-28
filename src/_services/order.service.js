@@ -9,9 +9,7 @@ export const orderService = {
 };
 
 async function getAll() {
-  const requestConfig = {
-    headers: authHeader(),
-  };
+  const requestConfig = {};
 
   return await axios
     .get(`${backendUrl}/api/orders`, requestConfig)
@@ -19,9 +17,7 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const requestConfig = {
-    headers: authHeader(),
-  };
+  const requestConfig = {};
   return await axios
     .get(`${backendUrl}/api/orders/${id}`, requestConfig)
     .then(handleResponse);

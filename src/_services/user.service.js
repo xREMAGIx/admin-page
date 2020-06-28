@@ -1,4 +1,3 @@
-import { authHeader } from "../_helpers";
 import axios from "axios";
 import backendUrl from "../_constants";
 
@@ -11,14 +10,6 @@ export const userService = {
   update,
   delete: _delete,
   getMe,
-};
-
-const setAuthToken = (token) => {
-  if (token) {
-    axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-  } else {
-    delete axios.defaults.headers.common["Authorization"];
-  }
 };
 
 async function login(user) {
@@ -34,8 +25,7 @@ async function login(user) {
     .then(handleResponse);
 }
 
-async function getMe(token) {
-  setAuthToken(token);
+async function getMe() {
   const requestConfig = {
     headers: {
       "Content-Type": "application/json",
@@ -48,7 +38,7 @@ async function getMe(token) {
 
 async function logout() {
   // remove user from local storage to log user out
-  await axios.post("${backendUrl}/api/auth/logout");
+  await axios.post(`${backendUrl}/api/auth/logout`);
   localStorage.removeItem("user");
 }
 
@@ -62,9 +52,7 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const requestConfig = {
-    headers: {},
-  };
+  const requestConfig = {};
   return await axios
     .get(`${backendUrl}/api/user/${id}`, requestConfig)
     .then(handleResponse);
@@ -79,16 +67,12 @@ async function register(user) {
 
   const body = JSON.stringify(user);
   await axios
-    .post("${backendUrl}/api/auth/register", body, config)
+    .post(`${backendUrl}/api/auth/register`, body, config)
     .then(handleResponse);
 }
 
 function update(user) {
-  const requestOptions = {
-    method: "PUT",
-    headers: { ...authHeader(), "Content-Type": "application/json" },
-    body: JSON.stringify(user),
-  };
+  const requestOptions = {};
 
   return fetch(`${backendUrl}/api/users/${user.id}`, requestOptions).then(
     handleResponse
@@ -99,7 +83,6 @@ function update(user) {
 function _delete(id) {
   const requestOptions = {
     method: "DELETE",
-    headers: authHeader(),
   };
 
   return fetch(`${backendUrl}/api/users/${id}`, requestOptions).then(

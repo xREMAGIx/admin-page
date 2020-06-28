@@ -28,15 +28,18 @@ import Categories from "./front-end/Categories";
 
 import Brands from "./front-end/Brands";
 
-import Cookies from "universal-cookie";
-const cookies = new Cookies();
+import setAuthToken from "./_helpers/setAuthToken";
 
+if (localStorage.getItem("token")) {
+  console.log("aaa");
+  setAuthToken(localStorage.getItem("token"));
+}
 const App = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users);
 
   useEffect(() => {
-    dispatch(userActions.getMe(cookies.get("token")));
+    dispatch(userActions.getMe());
   }, [dispatch]);
 
   return (

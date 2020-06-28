@@ -1,4 +1,3 @@
-import { authHeader } from "../_helpers";
 import axios from "axios";
 import backendUrl from "../_constants";
 
@@ -20,9 +19,7 @@ async function getAll() {
 }
 
 async function getById(id) {
-  const requestConfig = {
-    headers: authHeader(),
-  };
+  const requestConfig = {};
   return await axios
     .get(`${backendUrl}/api/products/${id}`, requestConfig)
     .then(handleResponse);

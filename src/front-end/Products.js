@@ -28,7 +28,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import Skeleton from "@material-ui/lab/Skeleton";
 import backendUrl from "../_constants";
-import { history } from "../_helpers";
 
 function dateFormat(date) {
   return new Intl.DateTimeFormat("en-GB", {
@@ -84,7 +83,6 @@ const headCells = [
   { id: "brand", numeric: false, disablePadding: true, label: "Brand" },
   { id: "img", numeric: false, disablePadding: false, label: "Image" },
   { id: "price", numeric: true, disablePadding: false, label: "Price" },
-  { id: "size", numeric: true, disablePadding: false, label: "Size" },
   { id: "discount", numeric: true, disablePadding: false, label: "Discount" },
   {
     id: "description",
@@ -552,7 +550,15 @@ export default function Products() {
                                   </Typography>
                                 </Grid>
                               </TableCell>
-                              <TableCell scope="row" padding="none">
+                              <TableCell
+                                style={{
+                                  maxWidth: "5vw",
+                                  whiteSpace: "normal",
+                                  wordWrap: "break-word",
+                                }}
+                                scope="row"
+                                // padding="none"
+                              >
                                 <Grid item xs zeroMinWidth>
                                   <Typography variant="body2" noWrap>
                                     {row.productName}
@@ -580,13 +586,12 @@ export default function Products() {
                               <TableCell align="right">
                                 {row.price.toLocaleString()}
                               </TableCell>
-                              <TableCell align="right">{row.size}</TableCell>
                               <TableCell align="right">
                                 {row.discount}%
                               </TableCell>
                               <TableCell
                                 style={{
-                                  maxWidth: "5vw",
+                                  maxWidth: "20vw",
                                   whiteSpace: "normal",
                                   wordWrap: "break-word",
                                 }}

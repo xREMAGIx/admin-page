@@ -45,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
   gridList: {
     height: "60vh",
   },
+  productSection: {
+    color: theme.palette.primary.main,
+    fontWeight: "bold",
+  },
 }));
 
 export default function ProductEdit(props) {
@@ -75,7 +79,31 @@ export default function ProductEdit(props) {
   //const user = useSelector(state => state.authentication.user);
   const dispatch = useDispatch();
 
-  const { sku, productName, description, price, discount, size } = formData;
+  const {
+    sku,
+    productName,
+    description,
+    price,
+    discount,
+    cpu,
+    gpu,
+    os,
+    ram,
+    storage,
+    newFeature,
+    display,
+    displayResolution,
+    displayScreen,
+    camera,
+    video,
+    wifi,
+    bluetooth,
+    ports,
+    size,
+    weight,
+    material,
+    batteryCapacity,
+  } = formData;
 
   useEffect(() => {
     function fetchData() {
@@ -99,10 +127,6 @@ export default function ProductEdit(props) {
       setLoading((loading) => !loading);
     }
   }, [products.item, categories.items, brands.items]);
-
-  useEffect(() => {
-    console.log(categoryIndex);
-  }, [categoryIndex]);
 
   const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -145,8 +169,6 @@ export default function ProductEdit(props) {
   };
 
   const onSave = () => {
-    console.log(formData);
-    console.log(image);
     dispatch(
       productActions.update(props.match.params.id, formData, image, delImage)
     );
@@ -216,11 +238,15 @@ export default function ProductEdit(props) {
               </React.Fragment>
             ) : (
               <React.Fragment>
-                <Typography variant="h4" gutterBottom>
+                <Typography variant="h4" align="center" gutterBottom>
                   Product Edit
                 </Typography>
                 <Grid container direction="row" spacing={5}>
                   <Grid container item xs={12} md={6} spacing={3}>
+                    {/* General */}
+                    <Typography className={classes.productSection} variant="h6">
+                      General
+                    </Typography>
                     <Grid item xs={12}>
                       <TextField
                         fullWidth
@@ -246,9 +272,8 @@ export default function ProductEdit(props) {
                     <Grid item xs={12}>
                       <Autocomplete
                         id="category-cb"
-                        options={categories.items}
+                        options={categories.items || []}
                         getOptionLabel={(options) => options.name}
-                        defaultValue={categories.items[categoryIndex]}
                         onChange={(e, value) => handleCategorySelected(value)}
                         style={{ width: "100%" }}
                         renderInput={(params) => (
@@ -263,9 +288,8 @@ export default function ProductEdit(props) {
                     <Grid item xs={12}>
                       <Autocomplete
                         id="brand-cb"
-                        options={brands.items}
+                        options={brands.items || []}
                         getOptionLabel={(options) => options.name}
-                        defaultValue={brands.items[brandIndex]}
                         onChange={(e, value) => handleBrandSelected(value)}
                         style={{ width: "100%" }}
                         renderInput={(params) => (
@@ -273,6 +297,7 @@ export default function ProductEdit(props) {
                             {...params}
                             label="Brand"
                             variant="outlined"
+                            margin="normal"
                           />
                         )}
                       />
@@ -283,7 +308,7 @@ export default function ProductEdit(props) {
                         id="outlined-multiline-description"
                         label="Description"
                         multiline
-                        rows="2"
+                        rows="4"
                         variant="outlined"
                         name="description"
                         value={description}
@@ -338,26 +363,241 @@ export default function ProductEdit(props) {
                         </FormControl>
                       </Grid>
                     </Grid>
+
+                    {/* Configurations */}
+                    <Typography className={classes.productSection} variant="h6">
+                      Configurations
+                    </Typography>
                     <Grid item xs={12}>
-                      <FormControl
+                      <TextField
                         fullWidth
-                        className={classes.margin}
+                        label="CPU"
+                        id="outlined-cpu"
                         variant="outlined"
-                      >
-                        <InputLabel htmlFor="outlined-adornment-size">
-                          Size
-                        </InputLabel>
-                        <OutlinedInput
-                          id="outlined-adornment-size"
-                          name="size"
-                          value={size}
-                          onChange={(e) => onChange(e)}
-                          startAdornment={
-                            <InputAdornment position="start">Kg</InputAdornment>
-                          }
-                          labelWidth={30}
-                        />
-                      </FormControl>
+                        name="cpu"
+                        value={cpu}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="GPU"
+                        id="outlined-gpu"
+                        variant="outlined"
+                        name="gpu"
+                        value={gpu}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="OS"
+                        id="outlined-os"
+                        variant="outlined"
+                        name="os"
+                        value={os}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="RAM"
+                        id="outlined-ram"
+                        variant="outlined"
+                        name="ram"
+                        value={ram}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Storage"
+                        id="outlined-storage"
+                        variant="outlined"
+                        name="storage"
+                        value={storage}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="New Features"
+                        id="outlined-newFeature"
+                        variant="outlined"
+                        name="newFeature"
+                        value={newFeature}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    {/* Display */}
+                    <Typography className={classes.productSection} variant="h6">
+                      Display
+                    </Typography>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Display"
+                        id="outlined-display"
+                        variant="outlined"
+                        name="display"
+                        value={display}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Display Resolution"
+                        id="outlined-displayResolution"
+                        variant="outlined"
+                        name="displayResolution"
+                        value={displayResolution}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Display Screen"
+                        id="outlined-displayScreen"
+                        variant="outlined"
+                        name="displayScreen"
+                        value={displayScreen}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    {/* Camera */}
+                    <Typography className={classes.productSection} variant="h6">
+                      Camera
+                    </Typography>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Camera"
+                        id="outlined-camera"
+                        variant="outlined"
+                        name="camera"
+                        value={camera}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Video"
+                        id="outlined-video"
+                        variant="outlined"
+                        name="video"
+                        value={video}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    {/* Connectivity */}
+                    <Typography className={classes.productSection} variant="h6">
+                      Connectivity
+                    </Typography>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Wifi"
+                        id="outlined-wifi"
+                        variant="outlined"
+                        name="wifi"
+                        value={wifi}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Bluetooth"
+                        id="outlined-bluetooth"
+                        variant="outlined"
+                        name="bluetooth"
+                        value={bluetooth}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Ports"
+                        id="outlined-ports"
+                        variant="outlined"
+                        name="ports"
+                        value={ports}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    {/* Physical details */}
+                    <Typography className={classes.productSection} variant="h6">
+                      Physical details
+                    </Typography>
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Size"
+                        id="outlined-size"
+                        variant="outlined"
+                        name="size"
+                        value={size}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Weight"
+                        id="outlined-weight"
+                        variant="outlined"
+                        name="weight"
+                        value={weight}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Material"
+                        id="outlined-material"
+                        variant="outlined"
+                        name="material"
+                        value={material}
+                        onChange={(e) => onChange(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        fullWidth
+                        label="Battery Capacity"
+                        id="outlined-batteryCapacity"
+                        variant="outlined"
+                        name="batteryCapacity"
+                        value={batteryCapacity}
+                        onChange={(e) => onChange(e)}
+                      />
                     </Grid>
                   </Grid>
                   <Grid container item xs={12} md={6} justify="center">

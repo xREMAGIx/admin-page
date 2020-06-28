@@ -1,13 +1,13 @@
 import { userConstants } from "../_constants";
 import Cookies from "universal-cookie";
+import setAuthToken from "../_helpers/setAuthToken";
 
 const initialState = {
+  token: localStorage.getItem("token"),
   loading: true,
   isAuthenticated: false,
   user: null,
 };
-
-const cookies = new Cookies();
 
 export function users(state = initialState, action) {
   switch (action.type) {
@@ -17,7 +17,8 @@ export function users(state = initialState, action) {
         loading: true,
       };
     case userConstants.LOGIN_SUCCESS:
-      cookies.set("token", action.data.token);
+      localStorage.setItem("token", action.data.token);
+      setAuthToken(localStorage.getItem("token"));
       return {
         loading: false,
         isAuthenticated: true,
@@ -39,7 +40,7 @@ export function users(state = initialState, action) {
       return { ...state, loading: false, error: action.error };
 
     case userConstants.LOGOUT:
-      cookies.remove("token");
+      localStorage.removeItem("token");
       return {
         ...state,
         loading: false,
