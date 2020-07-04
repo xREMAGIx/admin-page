@@ -105,12 +105,13 @@ export default function SignIn() {
       setErrorMessage("Please fill out all required field");
     } else {
       dispatch(userActions.login(formData));
-      if (!users.user && users.error) {
-        setErrorOpen(true);
-        setErrorMessage("Wrong email or password!");
-      }
     }
   };
+
+  // useEffect(() => {
+  //   setErrorOpen(true);
+  //   setErrorMessage(users.error);
+  // }, [users.error]);
 
   if (isAuthenticated) {
     return <Redirect to="/"></Redirect>;
