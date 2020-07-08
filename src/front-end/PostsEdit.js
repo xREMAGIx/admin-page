@@ -73,7 +73,7 @@ export default function PostEdit(props) {
 
   const [postContent, setPostContent] = React.useState("");
   const [title, setTitle] = React.useState("");
-  const [image, setImage] = React.useState("");
+  //const [image, setImage] = React.useState("");
 
   //   useEffect(() => {
   //     setFormData({ title: title, content: postContent });
@@ -91,31 +91,23 @@ export default function PostEdit(props) {
   useEffect(() => {
     //setFormData({ ...posts.items });
     // //setOnImageChange({ ...formData.image });
-    if (posts.items !== undefined) {
-      setTitle(posts.items.title);
-      setPostContent(posts.items.content);
+    if (posts.item !== undefined) {
+      setTitle(posts.item.title);
+      setPostContent(posts.item.content);
     }
     // console.log(formData);
     //setTitle({ ...props.items });
     //setLoaded(true);
-  }, [posts.items]);
+  }, [posts.item]);
 
   useEffect(() => {
     setFormData({ title: title, content: postContent });
     //setOnImageChange({ ...formData.image });
   }, [title, postContent]);
 
-  const handleLog = () => {
-    console.log(title);
-    console.log(postContent);
-    console.log(formData);
-    console.log(posts.items);
-  };
-
   const onSave = () => {
     //setFormData({ title: title, content: postContent });
-    console.log(formData);
-    dispatch(postActions.update(props.match.params.id, formData, image));
+    dispatch(postActions.update(props.match.params.id, formData));
   };
 
   return (
@@ -124,15 +116,15 @@ export default function PostEdit(props) {
         <CustomDrawer />
         <main className={classes.content}>
           <div className={classes.appBarSpacer} />
-          {posts.items !== null && (
+          {posts.item && (
             <Container maxWidth="lg" className={classes.container}>
               <Typography variant="h4" gutterBottom>
                 Post Edit
               </Typography>
               <TextEditor
                 onTitleChange={(e) => setTitle(e)}
-                content={postContent}
-                title={title}
+                content={postContent || ""}
+                title={title || ""}
                 onChange={(e) => setPostContent(e)}
               />
               {/* <div className={classes.postBtn}>

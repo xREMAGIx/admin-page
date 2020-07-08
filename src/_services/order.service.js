@@ -6,6 +6,7 @@ export const orderService = {
   getAll,
   getById,
   update,
+  delete: _delete,
 };
 
 async function getAll() {
@@ -34,6 +35,16 @@ async function update(id, data) {
 
   return await axios
     .post(`${backendUrl}/api/orders/${id}`, body, requestConfig)
+    .then(handleResponse);
+}
+
+async function _delete(id) {
+  const requestConfig = {
+    // headers: authHeader()
+  };
+
+  return await axios
+    .delete(`${backendUrl}/api/orders/${id}`, requestConfig)
     .then(handleResponse);
 }
 

@@ -16,7 +16,6 @@ function getAll() {
 
     categoryService.getAll().then(
       (categories) => {
-        console.log(categories);
         dispatch(success(categories));
       },
       (error) => dispatch(failure(error.toString()))

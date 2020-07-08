@@ -386,11 +386,15 @@ export default function Products() {
         ? products.items.map((element) =>
             Object.assign({
               ...element,
-              category: categories.items.find(
-                (category) => category.id === element.category
-              ).name,
-              brand: brands.items.find((brand) => brand.id === element.brand)
-                .name,
+              category:
+                (
+                  categories.items.find(
+                    (category) => category.id === element.category
+                  ) || {}
+                ).name || element.category,
+              brand:
+                (brands.items.find((brand) => brand.id === element.brand) || {})
+                  .name || element.brand,
             })
           )
         : null

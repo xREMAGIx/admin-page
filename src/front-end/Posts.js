@@ -442,6 +442,7 @@ export default function Posts() {
               >
                 {!posts.items ? (
                   <Skeleton
+                    component="thead"
                     variant="rect"
                     width={"100%"}
                     height={40}
@@ -460,6 +461,7 @@ export default function Posts() {
                 )}
                 {!posts.items ? (
                   <Skeleton
+                    component="tbody"
                     variant="rect"
                     width={"100%"}
                     height={100}
@@ -492,17 +494,46 @@ export default function Posts() {
                                 inputProps={{ "aria-labelledby": labelId }}
                               />
                             </TableCell>
+
                             <TableCell
-                              component="th"
-                              id={labelId}
+                              style={{
+                                maxWidth: "10vw",
+                                whiteSpace: "normal",
+                                wordWrap: "break-word",
+                              }}
                               scope="row"
                               padding="none"
                             >
-                              {row.title}
+                              <Grid item xs zeroMinWidth>
+                                <Tooltip
+                                  title={
+                                    <Typography variant="body2">
+                                      {row.title}
+                                    </Typography>
+                                  }
+                                >
+                                  <Typography variant="body2" noWrap>
+                                    {row.title}
+                                  </Typography>
+                                </Tooltip>
+                              </Grid>
                             </TableCell>
-                            <TableCell scope="row" padding="none">
-                              {JSON.parse(row.content).blocks[0].text}
+
+                            <TableCell
+                              style={{
+                                maxWidth: "30vw",
+                                whiteSpace: "normal",
+                                wordWrap: "break-word",
+                              }}
+                              scope="row"
+                            >
+                              <Grid item xs zeroMinWidth>
+                                <Typography variant="body2" noWrap>
+                                  {JSON.parse(row.content).blocks[0].text}
+                                </Typography>
+                              </Grid>
                             </TableCell>
+
                             <TableCell scope="row" padding="none">
                               {dateFormat(row.updatedAt)}
                             </TableCell>

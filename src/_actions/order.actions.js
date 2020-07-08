@@ -6,6 +6,7 @@ export const orderActions = {
   getAll,
   getById,
   update,
+  delete: _delete,
 };
 
 function getAll() {
@@ -91,5 +92,38 @@ function update(id, data) {
   }
   function failure(error) {
     return { type: orderConstants.UPDATE_FAILURE, error };
+  }
+}
+
+function _delete(id) {
+  return async (dispatch) => {
+    dispatch(request(id));
+    await orderService.delete(id).then(
+      (id) => {
+        dispatch(success(id));
+        window.location.reload();
+      },
+      (error) => {
+        if (error.response && error.response.data) {
+          let errorkey = Object.keys(error.response.data)[0];
+
+          let errorValue = error.response.data[errorkey][0];
+
+          dispatch(failure(errorkey.toUpperCase() + ": " + errorValue));
+        } else {
+          dispatch(failure(error.toString()));
+        }
+      }
+    );
+  };
+
+  function request(id) {
+    return { type: orderConstants.DELETE_REQUEST, id };
+  }
+  function success(id) {
+    return { type: orderConstants.DELETE_SUCCESS, id };
+  }
+  function failure(error) {
+    return { type: orderConstants.DELETE_FAILURE, error };
   }
 }

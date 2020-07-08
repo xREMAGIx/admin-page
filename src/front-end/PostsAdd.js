@@ -80,15 +80,8 @@ export default function PostAdd(props) {
     //setOnImageChange({ ...formData.image });
   }, [title, postContent]);
 
-  const handleLog = () => {
-    console.log(title);
-    console.log(postContent);
-    console.log(formData);
-  };
-
   const onSave = () => {
     //setFormData({ title: title, content: postContent });
-    console.log(formData);
     dispatch(postActions.add(formData, image));
   };
 

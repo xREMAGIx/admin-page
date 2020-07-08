@@ -31,7 +31,6 @@ import Brands from "./front-end/Brands";
 import setAuthToken from "./_helpers/setAuthToken";
 
 if (localStorage.getItem("token")) {
-  console.log("aaa");
   setAuthToken(localStorage.getItem("token"));
 }
 const App = () => {

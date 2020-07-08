@@ -11,20 +11,24 @@ export function posts(
       };
     case postConstants.GETALL_SUCCESS:
       return {
+        ...state,
         items: action.posts,
       };
     case postConstants.GETALL_FAILURE:
       return {
+        ...state,
         error: action.error,
       };
 
     case postConstants.GETBYID_REQUEST:
       return {
+        ...state,
         loading: true,
       };
     case postConstants.GETBYID_SUCCESS:
       return {
-        items: action.posts,
+        ...state,
+        item: action.posts,
       };
     case postConstants.GETBYID_ERROR:
       return { error: action.error };

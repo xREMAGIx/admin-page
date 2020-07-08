@@ -56,8 +56,6 @@ function getComparator(order, orderBy) {
 }
 
 function stableSort(array, comparator) {
-  console.log(array);
-  console.log(Array.isArray(array));
   const stabilizedThis = array.map((el, index) => [el, index]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
@@ -438,7 +436,12 @@ export default function Categories() {
                 aria-label="enhanced table"
               >
                 {!categories.items ? (
-                  <Skeleton variant="rect" width={"100%"} height={40} />
+                  <Skeleton
+                    component="thead"
+                    variant="rect"
+                    width={"100%"}
+                    height={40}
+                  />
                 ) : (
                   <EnhancedTableHead
                     classes={classes}
@@ -451,7 +454,12 @@ export default function Categories() {
                   />
                 )}
                 {!categories.items ? (
-                  <Skeleton variant="rect" width={"100%"} height={100} />
+                  <Skeleton
+                    component="tbody"
+                    variant="rect"
+                    width={"100%"}
+                    height={100}
+                  />
                 ) : (
                   <TableBody>
                     {Array.isArray(categories.items) &&
