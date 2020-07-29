@@ -576,7 +576,7 @@ export default function Products() {
                                 {row.brand}
                               </TableCell>
                               <TableCell padding="none">
-                                {row.images.length > 0 ? (
+                                {row.images && row.images.length > 0 ? (
                                   <img
                                     className={classes.img}
                                     src={
