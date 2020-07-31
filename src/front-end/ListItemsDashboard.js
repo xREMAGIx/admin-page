@@ -6,7 +6,7 @@ import ListSubheader from "@material-ui/core/ListSubheader";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import PeopleIcon from "@material-ui/icons/People";
-import BarChartIcon from "@material-ui/icons/BarChart";
+import DevicesIcon from "@material-ui/icons/Devices";
 import CategoryIcon from "@material-ui/icons/Category";
 import BrandingWatermarkIcon from "@material-ui/icons/BrandingWatermark";
 import PanoramaIcon from "@material-ui/icons/Panorama";
@@ -27,7 +27,7 @@ export const mainListItems = (
 
     <ListItem button component={Link} to="/products">
       <ListItemIcon>
-        <FastfoodIcon />
+        <DevicesIcon />
       </ListItemIcon>
       <ListItemText primary="Products" />
     </ListItem>
@@ -66,25 +66,7 @@ export const mainListItems = (
       </ListItemIcon>
       <ListItemText primary="Users" />
     </ListItem>
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary="Reports" />
-    </ListItem>
-  </div>
-);
-
-export const secondaryListItems = (
-  <div>
-    <ListSubheader inset>Store page</ListSubheader>
-    {/* <ListItem button component="a" href="/text-editor">
-      <ListItemIcon>
-        <TextFormatIcon />
-      </ListItemIcon>
-      <ListItemText primary="Text Editor" />
-    </ListItem> */}
-    <ListItem button component="a" href="/banner">
+    <ListItem button component={Link} to="/banner">
       <ListItemIcon>
         <PanoramaIcon />
       </ListItemIcon>
@@ -92,3 +74,5 @@ export const secondaryListItems = (
     </ListItem>
   </div>
 );
+
+export const secondaryListItems = <div></div>;

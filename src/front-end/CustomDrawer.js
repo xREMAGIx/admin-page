@@ -159,11 +159,7 @@ export default function CustomDrawer() {
           >
             Admin page
           </Typography>
-          <IconButton color="inherit">
-            <Badge badgeContent={4} color="secondary">
-              <NotificationsIcon />
-            </Badge>
-          </IconButton>
+
           <div>
             <IconButton
               aria-label="account of current user"
@@ -198,7 +194,6 @@ export default function CustomDrawer() {
               open={openProfile}
               onClose={handleClose}
             >
-              <MenuItem onClick={handleClose}>Message</MenuItem>
               <MenuItem onClick={() => logout()}>Logout</MenuItem>
             </Menu>
           </div>
