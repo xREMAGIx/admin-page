@@ -10,6 +10,7 @@ export const userActions = {
   getById,
   delete: _delete,
   getMe,
+  update,
 };
 
 function getMe() {
@@ -158,6 +159,32 @@ function getById(id) {
   }
   function failure(error) {
     return { type: userConstants.GETBYID_FAILURE, error };
+  }
+}
+
+function update(id, user) {
+  return async (dispatch) => {
+    dispatch(request(id));
+    await userService.update(id, user).then(
+      (id) => {
+        dispatch(success(id));
+
+        history.push({ pathname: "/users", state: 202 });
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+      }
+    );
+  };
+
+  function request(id) {
+    return { type: userConstants.UPDATE_REQUEST, id };
+  }
+  function success(id) {
+    return { type: userConstants.UPDATE_SUCCESS, id };
+  }
+  function failure(id, error) {
+    return { type: userConstants.UPDATE_FAILURE, id, error };
   }
 }
 

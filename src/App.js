@@ -28,6 +28,9 @@ import Categories from "./front-end/Categories";
 
 import Brands from "./front-end/Brands";
 
+import Users from "./front-end/Users";
+import UsersEdit from "./front-end/UsersEdit";
+
 import setAuthToken from "./_helpers/setAuthToken";
 
 if (localStorage.getItem("token")) {
@@ -114,6 +117,18 @@ const App = () => {
           exact
           path="/banner"
           component={Banner}
+          user={user}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/users"
+          component={Users}
+          user={user}
+        ></AdminRoute>
+        <AdminRoute
+          exact
+          path="/users-edit/:id"
+          component={UsersEdit}
           user={user}
         ></AdminRoute>
         <AdminRoute render={() => <h1>404: page not found</h1>} />

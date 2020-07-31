@@ -71,12 +71,19 @@ async function register(user) {
     .then(handleResponse);
 }
 
-function update(user) {
-  const requestOptions = {};
+async function update(id, user) {
+  const requestConfig = {
+    headers: {
+      //authHeader(),
+      "Content-Type": "application/json",
+    },
+  };
 
-  return fetch(`${backendUrl}/api/users/${user.id}`, requestOptions).then(
-    handleResponse
-  );
+  const body = JSON.stringify(user);
+
+  return await axios
+    .put(`/api/user/${id}`, body, requestConfig)
+    .then(handleResponse);
 }
 
 // prefixed function name with underscore because delete is a reserved word in javascript
