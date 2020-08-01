@@ -15,6 +15,10 @@ import GridListTile from "@material-ui/core/GridListTile";
 import GridListTileBar from "@material-ui/core/GridListTileBar";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Link } from "react-router-dom";
+import { convertFromRaw, convertToRaw, EditorState } from "draft-js";
+
+import { Editor } from "react-draft-wysiwyg";
+import "../../node_modules/react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -51,6 +55,21 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const content = {
+  entityMap: {},
+  blocks: [
+    {
+      key: "637gr",
+      text: "Initialized from content state.",
+      type: "unstyled",
+      depth: 0,
+      inlineStyleRanges: [],
+      entityRanges: [],
+      data: {},
+    },
+  ],
+};
+
 export default function ProductEdit(props) {
   const classes = useStyles();
 
@@ -71,6 +90,7 @@ export default function ProductEdit(props) {
     discount: 2,
     size: 3,
     images: [],
+    content: "",
   });
 
   const products = useSelector((state) => state.products);
@@ -105,6 +125,14 @@ export default function ProductEdit(props) {
     batteryCapacity,
   } = formData;
 
+  const [editorState, setEditorState] = React.useState(
+    EditorState.createEmpty()
+  );
+
+  const onEditorStateChange = (editorState) => {
+    setEditorState(editorState);
+  };
+
   useEffect(() => {
     function fetchData() {
       dispatch(productActions.getById(props.match.params.id));
@@ -115,7 +143,7 @@ export default function ProductEdit(props) {
 
   useEffect(() => {
     setFormData({ ...products.item });
-    if (products.item) {
+    if (products.item && products.item !== null) {
       setCategoryIndex(
         categories.items.findIndex(
           (value) => value._id === products.item.category
@@ -124,9 +152,23 @@ export default function ProductEdit(props) {
       setBrandIndex(
         brands.items.findIndex((value) => value._id === products.item.brand)
       );
+
+      products.item.content &&
+        setEditorState(
+          EditorState.createWithContent(
+            convertFromRaw(JSON.parse(products.item.content))
+          )
+        );
       setLoading((loading) => !loading);
     }
   }, [products.item, categories.items, brands.items]);
+
+  useEffect(() => {
+    setFormData({
+      ...formData,
+      content: JSON.stringify(convertToRaw(editorState.getCurrentContent())),
+    });
+  }, [editorState]);
 
   const handleOnImageChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -241,8 +283,8 @@ export default function ProductEdit(props) {
                 <Typography variant="h4" align="center" gutterBottom>
                   Product Edit
                 </Typography>
-                <Grid container direction="row" spacing={5}>
-                  <Grid container item xs={12} md={6} spacing={3}>
+                <Grid container direction="column-reverse" spacing={5}>
+                  <Grid container item xs={12} spacing={3}>
                     {/* General */}
                     <Typography className={classes.productSection} variant="h6">
                       General
@@ -272,6 +314,7 @@ export default function ProductEdit(props) {
                     <Grid item xs={12}>
                       <Autocomplete
                         id="category-cb"
+                        value={categories.items[categoryIndex]}
                         options={categories.items || []}
                         getOptionLabel={(options) => options.name}
                         onChange={(e, value) => handleCategorySelected(value)}
@@ -288,6 +331,7 @@ export default function ProductEdit(props) {
                     <Grid item xs={12}>
                       <Autocomplete
                         id="brand-cb"
+                        value={brands.items[brandIndex]}
                         options={brands.items || []}
                         getOptionLabel={(options) => options.name}
                         onChange={(e, value) => handleBrandSelected(value)}
@@ -599,8 +643,26 @@ export default function ProductEdit(props) {
                         onChange={(e) => onChange(e)}
                       />
                     </Grid>
+                    <Grid item xs={12}>
+                      {products.item && (
+                        <Editor
+                          wrapperClassName="demo-wrapper"
+                          editorClassName="demo-editor"
+                          editorState={editorState}
+                          onEditorStateChange={onEditorStateChange}
+                        />
+                      )}
+                    </Grid>
                   </Grid>
-                  <Grid container item xs={12} md={6} justify="center">
+
+                  <Grid
+                    container
+                    item
+                    xs={12}
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  >
                     <Grid item>
                       <div className={classes.uploadRoot}>
                         <input
@@ -622,7 +684,7 @@ export default function ProductEdit(props) {
                         </label>
                       </div>
                     </Grid>
-                    <Grid item>
+                    <Grid item xs={6}>
                       <GridList cellHeight={300} className={classes.gridList}>
                         {formData.images &&
                           formData.images.map((item) => (

@@ -78,14 +78,14 @@ async function update(id, product, image, delImage) {
   for (let i = 0; i < image.length; i++)
     imageData.append("image", image[i].img);
 
-  console.log("image data " + imageData);
-
   const requestConfig = {
     headers: {
       //authHeader(),
       "Content-Type": "application/json",
     },
   };
+
+  console.log(product);
 
   const body = JSON.stringify(product);
 

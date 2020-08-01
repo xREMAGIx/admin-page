@@ -159,6 +159,7 @@ function add(product, image) {
 }
 
 function update(id, product, image, delImageId) {
+  console.log(product);
   return async (dispatch) => {
     dispatch(request(id));
     await productService.update(id, product, image, delImageId).then(
