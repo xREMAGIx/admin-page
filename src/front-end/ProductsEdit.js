@@ -55,20 +55,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const content = {
-  entityMap: {},
-  blocks: [
-    {
-      key: "637gr",
-      text: "Initialized from content state.",
-      type: "unstyled",
-      depth: 0,
-      inlineStyleRanges: [],
-      entityRanges: [],
-      data: {},
-    },
-  ],
-};
+//Image upload for editor
+function uploadImageCallBack(file) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://api.imgur.com/3/image");
+    xhr.setRequestHeader("Authorization", "");
+    const data = new FormData();
+    data.append("image", file);
+    xhr.send(data);
+    xhr.addEventListener("load", () => {
+      const response = JSON.parse(xhr.responseText);
+      resolve(response);
+    });
+    xhr.addEventListener("error", () => {
+      const error = JSON.parse(xhr.responseText);
+      reject(error);
+    });
+  });
+}
 
 export default function ProductEdit(props) {
   const classes = useStyles();
@@ -648,6 +653,17 @@ export default function ProductEdit(props) {
                         <Editor
                           wrapperClassName="demo-wrapper"
                           editorClassName="demo-editor"
+                          toolbar={{
+                            inline: { inDropdown: true },
+                            list: { inDropdown: true },
+                            textAlign: { inDropdown: true },
+                            link: { inDropdown: true },
+                            history: { inDropdown: true },
+                            image: {
+                              uploadCallback: uploadImageCallBack,
+                              alt: { present: true, mandatory: true },
+                            },
+                          }}
                           editorState={editorState}
                           onEditorStateChange={onEditorStateChange}
                         />

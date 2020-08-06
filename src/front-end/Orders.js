@@ -548,7 +548,7 @@ export default function Orders() {
                               {row.payment}
                             </TableCell>
                             <TableCell scope="row" padding="none">
-                              {row.totalPrice}
+                              {row.totalPrice.toLocaleString()}
                             </TableCell>
                             <TableCell scope="row" padding="none">
                               <Typography

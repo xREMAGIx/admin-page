@@ -500,6 +500,7 @@ export default function ProductAdd(props) {
                   />
                 </Grid>
               </Grid>
+
               <Grid
                 container
                 item

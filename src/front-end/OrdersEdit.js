@@ -157,13 +157,13 @@ export default function OrderEdit(props) {
                     Shipping detail
                   </Typography>
                   <Typography gutterBottom>
-                    <strong>Name:</strong> {users.item.name}
+                    <strong>Name:</strong> {users.item.name || ""}
                   </Typography>
                   <Typography gutterBottom>
-                    <strong>Phone:</strong> {users.item.phone}
+                    <strong>Phone:</strong> {orders.item.phone || ""}
                   </Typography>
                   <Typography gutterBottom>
-                    <strong>Address:</strong> {users.item.address}
+                    <strong>Address:</strong> {orders.item.address || ""}
                   </Typography>
                   <Typography gutterBottom>
                     <strong>Payment:</strong> {orders.item.payment}
